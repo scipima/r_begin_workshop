@@ -280,6 +280,19 @@ gapminder |>
 ```
 
 ## UN Votes
+```{r}
+library(unvotes)
+un_votes <- unvotes::un_votes
+un_roll_calls <- unvotes::un_roll_calls
+```
+
+Get a quick glimpse of the distribution of votes.
+```{r}
+un_votes |> 
+  count(vote, sort = TRUE)
+```
+
+
 
 
 ## EP Data (documents)
