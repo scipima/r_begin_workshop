@@ -1,8 +1,10 @@
 ---
 title: "Data Analysis and Visualisation with R"
-format: 
-    html:
-        code-fold: true
+format:
+  html:
+    code-fold: true
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Learning objectives
@@ -35,7 +37,6 @@ A *code chunk* is a specially delimited section of the file.
 You can add one by moving the cursor to a blank line choosing Code > Insert Chunk from the RStudio menu. 
 When you do, an empty chunk will appear:
 ```{r}
-
 ```
 
 Code chunks are delimited by three backticks (found to the left of the 1 key on US and UK keyboards) at the start and end.
@@ -57,16 +58,19 @@ An alternative you may explore is [VS Code](https://code.visualstudio.com/).
 
 
 ## Before you begin to explore and analyse, set up your workspace
-A number of functions and packages come already install in what is generally referred to as `R base` (and you can actually see what's in it by typing `base::` in your console, and let the auto-complete suggest you the full list of functions ... ).
+A number of functions and packages come already installed in what is generally referred to as `R base` (and you can actually see what's in it by typing `base::` in your console, and let the auto-complete suggest you the full list of functions ... ).
 However, most of the things we'll do in this workshop need further `libraries`.
 To install the `tidyverse`, make sure you have an Internet connection. 
 Then *manually* run the code in the chunk below. 
-If you knit the document if will be skipped. 
+If you just render the document, this will be skipped - **however, if this is the first time you run this, make sure to manually run the code chunk below**. 
 We do this because you only need to install these packages once, not every time you run this file. 
 Either knit the chunk using the little green "play" arrow to the right of the chunk area, or copy and paste the text into the console window.
-```{r install, eval = FALSE}
+```{r}
+#| include: false
+#| eval: false
 
-## This code will not be evaluated automatically. (Notice the eval = FALSE declaration in the options section of the code chunk)
+# This code will not be evaluated automatically. 
+# Notice the eval = FALSE declaration in the options section of the code chunk
 
 my_packages <- c("tidyverse", "broom", "coefplot", "cowplot",
                  "gapminder", "GGally", "ggrepel", "ggridges", "gridExtra",
@@ -83,8 +87,8 @@ devtools::install_github("kjhealy/socviz")
 To begin we must load some libraries we will be using. 
 If we do not load them, R will not be able to find the functions contained in these libraries. 
 The `tidyverse` includes `ggplot2` (for data visualisation) and other libraries such as `dplyr` (for data manipulation).
-We also load the socviz and gapminder libraries.
-```{r setup}
+We also load the `socviz` and `gapminder` libraries.
+```{r}
 #| include: false
 
 ## Load the libraries we will be using
@@ -95,13 +99,7 @@ library(ggrepel)
 library(socviz)
 ```
 
-Notice that here, the braces at the start of the code chunk have some additional options set in them. 
-There is the language, `r`, as before. 
-This is required. 
-Then there is the word `setup`, which is a label for your code chunk.
-Labels are useful to briefly say what the chunk does. 
-Label names must be unique (no two chunks in the same document can have the same label) and cannot contain spaces. 
-Then, after the comma, an option is set: `include=FALSE`. 
+Notice that here an option is set: `include=FALSE`. 
 This tells R to run this code but not to include the output in the final document. 
 
 When you click the **Render** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
@@ -127,9 +125,18 @@ A few examples:
 
 
 ### Let's start with some actual code
-Two ways to create a plot based on the `gapminder` data seen above.
+Let's go back to the `gapminder` data we saw before. 
+What kind of variable are we dealing with?
+Let's remind ourselves.
+```{r}
+head(gapminder)
+```
 
-* We can assign a ggplot plot to an object called `p`, and then add (literally, using `+`) layers on top of it.
+Say that we have an hypothesis regarding how life expectancy (`lifeExp`) changes in relations with GDP per capita (`gdpPercap`). 
+As these look like continuous variables, we could plot them in a scatterplot.
+There are at least two ways to create a plot within `ggplot`.
+
+* We can assign a ggplot plot to an object called `p` (the name doesn't matter, we can call it `mike` if we want to), and then add (literally, using `+`) layers on top of it.
 ```{r}
 p <- ggplot(data= gapminder,
           mapping = aes(x= gdpPercap,
@@ -143,13 +150,6 @@ p + geom_point() # and you can keep on adding to this, see below ...
 gapminder |>
   ggplot(aes(x= gdpPercap, y= lifeExp)) + 
   geom_point()
-```
-
-Integrating from 'R for Data Science'
-```{r}
-ggplot(data = mpg) +
-  geom_point(mapping = aes(x = displ,
-                           y = hwy))
 ```
 
 geom_smooth() using method = 'gam' and formula 'y ~ s(x, bs = "cs")'; GAM stands for generalised additive model
@@ -577,10 +577,11 @@ p + geom_point(mapping= aes(color= log(pop))) +
 ```
 
 
-unvotes
+## UN Votes
 
-ep data (documents)
 
-polls (EE, de, means, aggregations)
+## EP Data (documents)
+
+## Polls (EE, de, means, aggregations)
 
 
