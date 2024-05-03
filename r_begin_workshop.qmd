@@ -77,8 +77,7 @@ my_packages <- c("tidyverse", "broom", "coefplot", "cowplot",
                  "here", "interplot", "margins", "maps", "mapproj",
                  "mapdata", "MASS", "quantreg", "rlang", "scales",
                  "survey", "srvyr", "viridis", "viridisLite", "devtools")
-
-install.packages(my_packages, repos = "http://cran.rstudio.com")
+install.packages(my_packages)
 devtools::install_github("kjhealy/socviz")
 ```
 
@@ -139,8 +138,8 @@ There are at least two ways to create a plot within `ggplot`.
 * We can assign a ggplot plot to an object called `p` (the name doesn't matter, we can call it `mike` if we want to), and then add (literally, using `+`) layers on top of it.
 ```{r}
 p <- ggplot(data= gapminder,
-          mapping = aes(x= gdpPercap,
-                        y= lifeExp))
+            mapping = aes(x= gdpPercap,
+                          y= lifeExp))
 p + geom_point() # and you can keep on adding to this, see below ... 
 ```
 
@@ -152,18 +151,21 @@ gapminder |>
   geom_point()
 ```
 
-geom_smooth() using method = 'gam' and formula 'y ~ s(x, bs = "cs")'; GAM stands for generalised additive model
+Sometimes when we face a cloud like that, it is useful to plot a trendline on top, to understand the overall pattern. 
 ```{r}
+# geom_smooth() using method = 'gam' and formula 'y ~ s(x, bs = "cs")' - GAM stands for generalised additive model
 p + geom_smooth()
 p + geom_point() + geom_smooth() 
 ```
 
 Using method='lm' (linear model) as an argument to geom_smooth()
 ```{r}
-p<-ggplot(data= gapminder,
-          mapping = aes(x= gdpPercap,
-                        y= lifeExp))
-p + geom_point() + geom_smooth(method = 'lm')
+# another way to get the same result
+ggplot(data = gapminder,
+       mapping = aes(x = gdpPercap,
+                     y = lifeExp)) +
+  geom_point() + 
+  geom_smooth(method = 'lm')
 ```
 
 Data is quite bunched up against the left side. Gross Domestic Product per capita is not normally distributed across our country years. The x-axis scale would probably look better if it were transformed from a linear scale to a log scale. For this we can use a function called scale_x_log10(). As you might expect this function scales the x-axis of a plot to a log 10 basis. To use it we just add it to the plot:
@@ -190,8 +192,8 @@ p <- ggplot(data = gapminder,
                           y = lifeExp,
                           color = "purple"))
 p + geom_point() +
-    geom_smooth(method = "loess") +
-    scale_x_log10()
+  geom_smooth(method = "loess") +
+  scale_x_log10()
 ```
 
 And this (CORRECT)
@@ -200,8 +202,8 @@ p <- ggplot(data = gapminder,
             mapping = aes(x = gdpPercap,
                           y = lifeExp))
 p + geom_point(color = "purple") +
-    geom_smooth(method = "loess") +
-    scale_x_log10()
+  geom_smooth(method = "loess") +
+  scale_x_log10()
 ```
 
 For a variation, see
@@ -210,8 +212,8 @@ p <- ggplot(data = gapminder,
             mapping = aes(x = gdpPercap,
                           y = lifeExp)) 
 p + geom_point(alpha = 0.3) +
-    geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
-    scale_x_log10()
+  geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
+  scale_x_log10()
 ```
 
 For a second variation, see
@@ -220,8 +222,8 @@ p <- ggplot(data = gapminder,
             mapping = aes(x = gdpPercap,
                           y = lifeExp)) 
 p + geom_point(alpha = 0.3) +
-    geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
-    scale_x_log10()
+  geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
+  scale_x_log10()
 ```
 
 The SE option commands the standard error, and we can switch it off by inputing se= FALSE. THE ALPHA property regualte the transparency of the objects, from 0 to 1. for a more colourful version of th graph above, with continent colours differently, see 
@@ -231,8 +233,8 @@ p <- ggplot(data = gapminder,
                           y = lifeExp,
                           color= continent)) 
 p + geom_point(alpha = 0.3) +
-    geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
-    scale_x_log10()
+  geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
+  scale_x_log10()
 ```
 
 To add titles and captions, use labs as following
@@ -258,8 +260,8 @@ p <- ggplot(data = gapminder,
                           y = lifeExp,
                           color= continent)) 
 p + geom_point() +
-    geom_smooth(method = "loess") +
-    scale_x_log10()
+  geom_smooth(method = "loess") +
+  scale_x_log10()
 ```
 
 to fill the ribbon of the standard error, usee fill
@@ -270,8 +272,8 @@ p <- ggplot(data = gapminder,
                           color= continent,
                           fill= continent)) 
 p + geom_point() +
-    geom_smooth(method = "loess") +
-    scale_x_log10()
+  geom_smooth(method = "loess") +
+  scale_x_log10()
 ```
 
 To map only the continents, but not the lines or the ribbon, and cutting down on the lines will make the graph more readable
@@ -280,8 +282,8 @@ p <- ggplot(data = gapminder,
             mapping = aes(x = gdpPercap,
                           y = lifeExp)) 
 p + geom_point(mapping= aes(color= continent)) +
-    geom_smooth(method = "loess") +
-    scale_x_log10()
+  geom_smooth(method = "loess") +
+  scale_x_log10()
 ```
 
 To map continuous variables in gradient, use the color function not in the ggplot section, but in the geom one, exactly as follows
@@ -290,7 +292,7 @@ p <- ggplot(data = gapminder,
             mapping = aes(x = gdpPercap,
                           y = lifeExp)) 
 p + geom_point(mapping= aes(color= log(pop))) +
-    scale_x_log10()
+  scale_x_log10()
 ```
 
 
@@ -416,8 +418,8 @@ Two ways to create a plot.
 * We can assign a ggplot plot to an object called `p`, and then add (literally, using `+`) layers on top of it.
 ```{r}
 p <- ggplot(data= gapminder,
-          mapping = aes(x= gdpPercap,
-                        y= lifeExp))
+            mapping = aes(x= gdpPercap,
+                          y= lifeExp))
 p + geom_point()
 ```
 
@@ -473,8 +475,8 @@ p <- ggplot(data = gapminder,
                           y = lifeExp,
                           color = "purple"))
 p + geom_point() +
-    geom_smooth(method = "loess") +
-    scale_x_log10()
+  geom_smooth(method = "loess") +
+  scale_x_log10()
 ```
 
 And this (CORRECT)
@@ -483,8 +485,8 @@ p <- ggplot(data = gapminder,
             mapping = aes(x = gdpPercap,
                           y = lifeExp))
 p + geom_point(color = "purple") +
-    geom_smooth(method = "loess") +
-    scale_x_log10()
+  geom_smooth(method = "loess") +
+  scale_x_log10()
 ```
 
 For a variation, see
@@ -493,8 +495,8 @@ p <- ggplot(data = gapminder,
             mapping = aes(x = gdpPercap,
                           y = lifeExp)) 
 p + geom_point(alpha = 0.3) +
-    geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
-    scale_x_log10()
+  geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
+  scale_x_log10()
 ```
 
 For a second variation, see
@@ -503,8 +505,8 @@ p <- ggplot(data = gapminder,
             mapping = aes(x = gdpPercap,
                           y = lifeExp)) 
 p + geom_point(alpha = 0.3) +
-    geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
-    scale_x_log10()
+  geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
+  scale_x_log10()
 ```
 
 The SE option commands the standard error, and we can switch it off by inputing se= FALSE. THE ALPHA property regualte the transparency of the objects, from 0 to 1. for a more colourful version of th graph above, with continent colours differently, see 
@@ -514,8 +516,8 @@ p <- ggplot(data = gapminder,
                           y = lifeExp,
                           color= continent)) 
 p + geom_point(alpha = 0.3) +
-    geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
-    scale_x_log10()
+  geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
+  scale_x_log10()
 ```
 
 To add titles and captions, use labs as following
@@ -541,8 +543,8 @@ p <- ggplot(data = gapminder,
                           y = lifeExp,
                           color= continent)) 
 p + geom_point() +
-    geom_smooth(method = "loess") +
-    scale_x_log10()
+  geom_smooth(method = "loess") +
+  scale_x_log10()
 ```
 
 to fill the ribbon of the standard error, usee fill
@@ -553,8 +555,8 @@ p <- ggplot(data = gapminder,
                           color= continent,
                           fill= continent)) 
 p + geom_point() +
-    geom_smooth(method = "loess") +
-    scale_x_log10()
+  geom_smooth(method = "loess") +
+  scale_x_log10()
 ```
 
 To map only the continents, but not the lines or the ribbon, and cutting down on the lines will make the graph more readable
@@ -563,8 +565,8 @@ p <- ggplot(data = gapminder,
             mapping = aes(x = gdpPercap,
                           y = lifeExp)) 
 p + geom_point(mapping= aes(color= continent)) +
-    geom_smooth(method = "loess") +
-    scale_x_log10()
+  geom_smooth(method = "loess") +
+  scale_x_log10()
 ```
 
 To map continuous variables in gradient, use the color function not in the ggplot section, but in the geom one, exactly as follows
@@ -573,7 +575,7 @@ p <- ggplot(data = gapminder,
             mapping = aes(x = gdpPercap,
                           y = lifeExp)) 
 p + geom_point(mapping= aes(color= log(pop))) +
-    scale_x_log10()
+  scale_x_log10()
 ```
 
 
