@@ -1,17 +1,19 @@
 ---
 title: "Data Analysis and Visualisation with R"
-format: html
+format: 
+    html:
+        code-fold: true
 ---
 
 ## Learning objectives
 
 * Get familiar with an IDE.
 * Know how to set up a data research project.
+* Visualise data: choose an appropriate visualisation for your data; understand the layered approached typical of `ggplot2`.
 * Be able to read in, process, and store data.
-* Visualise data: choose an appropriate visualisation for your data.
 
 
-## Data Visualization Notes
+## Intro
 For this workshop, we borrow heavily from [Data Visualization for Social Science](https://socviz.co/index.html#preface).
 This very markdown is based off the R package accompanying the book. 
 You can use it to take notes, write your code, and produce a good-looking, reproducible document that records the work you have done. 
@@ -25,7 +27,7 @@ First the *key* ("title", "author", etc), then a colon, and then the *value* ass
 It is very picky when it comes with indentations, characters used, etc.
 
 
-## This is a Quarto File
+### This is a Quarto File
 [Markdown](http://rmarkdown.rstudio.com) is a simple formatting syntax for authoring HTML, PDF, and MS Word documents, and is also the basis for [Quarto](https://quarto.org/). 
 
 When you click the **Render** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
@@ -33,7 +35,6 @@ A *code chunk* is a specially delimited section of the file.
 You can add one by moving the cursor to a blank line choosing Code > Insert Chunk from the RStudio menu. 
 When you do, an empty chunk will appear:
 ```{r}
-
 
 ```
 
@@ -51,8 +52,11 @@ Some of the most important things to learn now:
 * Editor
 * Environment
 
+For this workshop, we rely on RStudio.
+An alternative you may explore is [VS Code](https://code.visualstudio.com/). 
 
-# Before you begin to explore and analyse, set up your workspace
+
+## Before you begin to explore and analyse, set up your workspace
 A number of functions and packages come already install in what is generally referred to as `R base` (and you can actually see what's in it by typing `base::` in your console, and let the auto-complete suggest you the full list of functions ... ).
 However, most of the things we'll do in this workshop need further `libraries`.
 To install the `tidyverse`, make sure you have an Internet connection. 
@@ -78,7 +82,7 @@ devtools::install_github("kjhealy/socviz")
 ## Set Up Your Project and Load Libraries
 To begin we must load some libraries we will be using. 
 If we do not load them, R will not be able to find the functions contained in these libraries. 
-The tidyverse includes ggplot and other tools. 
+The `tidyverse` includes `ggplot2` (for data visualisation) and other libraries such as `dplyr` (for data manipulation).
 We also load the socviz and gapminder libraries.
 ```{r setup}
 #| include: false
@@ -102,25 +106,40 @@ This tells R to run this code but not to include the output in the final documen
 
 When you click the **Render** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
 You can embed an R code chunk like this:
-
 ```{r}
 gapminder
+# knitr::kable(gapminder) |> head()
 ```
 
+A final note about the `here` [library](https://here.r-lib.org/).
+That is a great help if you have properly set up your project as I just indicated. 
+All paths will become relatively, and you can forget about remembering where you are in your machine. 
+The essential thing is that it relies on the `.RProject` file that is created automatically for you when you create a `Project` with `RStudio`. 
 
-## Get Started
-Two ways to create a plot.
+
+## Data Visualisation
+### Few initial words
+R has a consolidated role in data visualisation, well beyond the initial remit of statistics. 
+A few examples:
+
+* R at FT: https://johnburnmurdoch.github.io/slides/r-ggplot/#/
+* Resources compiled by people from Posit: https://themockup.blog/static/slides/intro-plot#1
+
+
+### Let's start with some actual code
+Two ways to create a plot based on the `gapminder` data seen above.
 
 * We can assign a ggplot plot to an object called `p`, and then add (literally, using `+`) layers on top of it.
 ```{r}
 p <- ggplot(data= gapminder,
           mapping = aes(x= gdpPercap,
                         y= lifeExp))
-p + geom_point()
+p + geom_point() # and you can keep on adding to this, see below ... 
 ```
 
 * Another way of achieving the same thing is as follows, which is more in line with a tidyverse style which heavily rely on pipes (`|>`). 
 ```{r}
+#| eval: false
 gapminder |>
   ggplot(aes(x= gdpPercap, y= lifeExp)) + 
   geom_point()
