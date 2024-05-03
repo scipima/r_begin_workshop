@@ -35,10 +35,7 @@ A *code chunk* is a specially delimited section of the file.
 You can add one by moving the cursor to a blank line choosing Code > Insert Chunk from the RStudio menu. 
 When you do, an empty chunk will appear:
 ```{r}
-<<<<<<< HEAD
-=======
 
->>>>>>> 1f904feeeeb48f3ace535562d9d14efb00395049
 ```
 
 Code chunks are delimited by three backticks (found to the left of the 1 key on US and UK keyboards) at the start and end.
@@ -143,6 +140,289 @@ p + geom_point() # and you can keep on adding to this, see below ...
 * Another way of achieving the same thing is as follows, which is more in line with a tidyverse style which heavily rely on pipes (`|>`). 
 ```{r}
 #| eval: false
+gapminder |>
+  ggplot(aes(x= gdpPercap, y= lifeExp)) + 
+  geom_point()
+```
+
+Integrating from 'R for Data Science'
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ,
+                           y = hwy))
+```
+
+geom_smooth() using method = 'gam' and formula 'y ~ s(x, bs = "cs")'; GAM stands for generalised additive model
+```{r}
+p + geom_smooth()
+p + geom_point() + geom_smooth() 
+```
+
+Using method='lm' (linear model) as an argument to geom_smooth()
+```{r}
+p<-ggplot(data= gapminder,
+          mapping = aes(x= gdpPercap,
+                        y= lifeExp))
+p + geom_point() + geom_smooth(method = 'lm')
+```
+
+Data is quite bunched up against the left side. Gross Domestic Product per capita is not normally distributed across our country years. The x-axis scale would probably look better if it were transformed from a linear scale to a log scale. For this we can use a function called scale_x_log10(). As you might expect this function scales the x-axis of a plot to a log 10 basis. To use it we just add it to the plot:
+```{r}
+p<-ggplot(data= gapminder,
+          mapping = aes(x= gdpPercap,
+                        y= lifeExp))
+p + geom_point() + 
+  geom_smooth(method = 'gam') +
+  scale_x_log10()
+```
+
+The labels on the tick-marks can be controlled through the scale_ functions.
+```{r}
+p + geom_point() + 
+  geom_smooth(method = 'gam') +
+  scale_x_log10(labels = scales:: dollar)
+```
+
+See the difference between this (WRONG)...
+```{r}
+p <- ggplot(data = gapminder,
+            mapping = aes(x = gdpPercap,
+                          y = lifeExp,
+                          color = "purple"))
+p + geom_point() +
+    geom_smooth(method = "loess") +
+    scale_x_log10()
+```
+
+And this (CORRECT)
+```{r}
+p <- ggplot(data = gapminder,
+            mapping = aes(x = gdpPercap,
+                          y = lifeExp))
+p + geom_point(color = "purple") +
+    geom_smooth(method = "loess") +
+    scale_x_log10()
+```
+
+For a variation, see
+```{r}
+p <- ggplot(data = gapminder,
+            mapping = aes(x = gdpPercap,
+                          y = lifeExp)) 
+p + geom_point(alpha = 0.3) +
+    geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
+    scale_x_log10()
+```
+
+For a second variation, see
+```{r}
+p <- ggplot(data = gapminder,
+            mapping = aes(x = gdpPercap,
+                          y = lifeExp)) 
+p + geom_point(alpha = 0.3) +
+    geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
+    scale_x_log10()
+```
+
+The SE option commands the standard error, and we can switch it off by inputing se= FALSE. THE ALPHA property regualte the transparency of the objects, from 0 to 1. for a more colourful version of th graph above, with continent colours differently, see 
+```{r}
+p <- ggplot(data = gapminder,
+            mapping = aes(x = gdpPercap,
+                          y = lifeExp,
+                          color= continent)) 
+p + geom_point(alpha = 0.3) +
+    geom_smooth(color = "orange", se = FALSE, size = 1, method = "lm") +
+    scale_x_log10()
+```
+
+To add titles and captions, use labs as following
+
+```{r}
+p<-ggplot(data=gapminder,
+          mapping= aes(x= gdpPercap,
+                       y= lifeExp))
+p + geom_point(alpha= 0.3) +
+  geom_smooth(method = 'gam') +
+  scale_x_log10(labels= scales:: dollar) +
+  labs(x= 'GDP per capita', 
+       y= 'Life Expectancy in Years', 
+       title= 'Economic Growth and Life Expectancy', 
+       subtitle= 'Data points are country-years', 
+       caption= 'Source: Gapminder.')
+```
+
+For a variation, see
+```{r}
+p <- ggplot(data = gapminder,
+            mapping = aes(x = gdpPercap,
+                          y = lifeExp,
+                          color= continent)) 
+p + geom_point() +
+    geom_smooth(method = "loess") +
+    scale_x_log10()
+```
+
+to fill the ribbon of the standard error, usee fill
+```{r}
+p <- ggplot(data = gapminder,
+            mapping = aes(x = gdpPercap,
+                          y = lifeExp,
+                          color= continent,
+                          fill= continent)) 
+p + geom_point() +
+    geom_smooth(method = "loess") +
+    scale_x_log10()
+```
+
+To map only the continents, but not the lines or the ribbon, and cutting down on the lines will make the graph more readable
+```{r}
+p <- ggplot(data = gapminder,
+            mapping = aes(x = gdpPercap,
+                          y = lifeExp)) 
+p + geom_point(mapping= aes(color= continent)) +
+    geom_smooth(method = "loess") +
+    scale_x_log10()
+```
+
+To map continuous variables in gradient, use the color function not in the ggplot section, but in the geom one, exactly as follows
+```{r}
+p <- ggplot(data = gapminder,
+            mapping = aes(x = gdpPercap,
+                          y = lifeExp)) 
+p + geom_point(mapping= aes(color= log(pop))) +
+    scale_x_log10()
+```
+
+
+unvotes
+
+ep data (documents)
+
+polls (EE, de, means, aggregations)
+
+
+
+---
+title: "Data Analysis and Visualisation with R"
+format: html
+---
+
+## Learning objectives
+
+* Get familiar with an IDE.
+* Know how to set up a data research project.
+* Be able to read in, process, and store data.
+* Visualise data: choose an appropriate visualisation for your data.
+
+
+## Data Visualization Notes
+For this workshop, we borrow heavily from [Data Visualization for Social Science](https://socviz.co/index.html#preface).
+This very markdown is based off the R package accompanying the book. 
+You can use it to take notes, write your code, and produce a good-looking, reproducible document that records the work you have done. 
+
+At the very top of the file is a section of *metadata*, or information about what the file is and what it does. 
+The metadata is delimited by three dashes at the start and another three at the end.
+You should change the title, author, and date to the values that suit you. 
+Keep the `output` line as it is for now, however. 
+Each line in the metadata has a structure. 
+First the *key* ("title", "author", etc), then a colon, and then the *value* associated with the key.  
+It is very picky when it comes with indentations, characters used, etc.
+
+
+## This is a Quarto File
+[Markdown](http://rmarkdown.rstudio.com) is a simple formatting syntax for authoring HTML, PDF, and MS Word documents, and is also the basis for [Quarto](https://quarto.org/). 
+
+When you click the **Render** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
+A *code chunk* is a specially delimited section of the file. 
+You can add one by moving the cursor to a blank line choosing Code > Insert Chunk from the RStudio menu. 
+When you do, an empty chunk will appear:
+```{r}
+```
+
+Code chunks are delimited by three backticks (found to the left of the 1 key on US and UK keyboards) at the start and end.
+The opening backticks also have a pair of braces and the letter `r`, to indicate what language the chunk is written in. 
+You write your code inside the code chunks. 
+Write your notes and other material around them, as here. 
+
+
+## Know your editor
+Please have a look at your screen.
+Some of the most important things to learn now:
+
+* Console
+* Editor
+* Environment
+
+
+# Before you begin to explore and analyse, set up your workspace
+A number of functions and packages come already install in what is generally referred to as `R base` (and you can actually see what's in it by typing `base::` in your console, and let the auto-complete suggest you the full list of functions ... ).
+However, most of the things we'll do in this workshop need further `libraries`.
+To install the `tidyverse`, make sure you have an Internet connection. 
+Then *manually* run the code in the chunk below. 
+If you knit the document if will be skipped. 
+We do this because you only need to install these packages once, not every time you run this file. 
+Either knit the chunk using the little green "play" arrow to the right of the chunk area, or copy and paste the text into the console window.
+```{r install, eval = FALSE}
+
+## This code will not be evaluated automatically. (Notice the eval = FALSE declaration in the options section of the code chunk)
+
+my_packages <- c("tidyverse", "broom", "coefplot", "cowplot",
+                 "gapminder", "GGally", "ggrepel", "ggridges", "gridExtra",
+                 "here", "interplot", "margins", "maps", "mapproj",
+                 "mapdata", "MASS", "quantreg", "rlang", "scales",
+                 "survey", "srvyr", "viridis", "viridisLite", "devtools")
+
+install.packages(my_packages, repos = "http://cran.rstudio.com")
+devtools::install_github("kjhealy/socviz")
+```
+
+
+## Set Up Your Project and Load Libraries
+To begin we must load some libraries we will be using. 
+If we do not load them, R will not be able to find the functions contained in these libraries. 
+The tidyverse includes ggplot and other tools. 
+We also load the socviz and gapminder libraries.
+```{r setup}
+#| include: false
+
+## Load the libraries we will be using
+library(tidyverse)
+library(here)
+library(gapminder)
+library(ggrepel)
+library(socviz)
+```
+
+Notice that here, the braces at the start of the code chunk have some additional options set in them. 
+There is the language, `r`, as before. 
+This is required. 
+Then there is the word `setup`, which is a label for your code chunk.
+Labels are useful to briefly say what the chunk does. 
+Label names must be unique (no two chunks in the same document can have the same label) and cannot contain spaces. 
+Then, after the comma, an option is set: `include=FALSE`. 
+This tells R to run this code but not to include the output in the final document. 
+
+When you click the **Render** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+You can embed an R code chunk like this:
+
+```{r}
+gapminder
+```
+
+
+## Get Started
+Two ways to create a plot.
+
+* We can assign a ggplot plot to an object called `p`, and then add (literally, using `+`) layers on top of it.
+```{r}
+p <- ggplot(data= gapminder,
+          mapping = aes(x= gdpPercap,
+                        y= lifeExp))
+p + geom_point()
+```
+
+* Another way of achieving the same thing is as follows, which is more in line with a tidyverse style which heavily rely on pipes (`|>`). 
+```{r}
 gapminder |>
   ggplot(aes(x= gdpPercap, y= lifeExp)) + 
   geom_point()
