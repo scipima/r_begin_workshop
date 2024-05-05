@@ -2,8 +2,12 @@
 title: "Data Analysis and Visualisation with R"
 format:
   html:
+    theme: united
+    embed-resources: true
     code-fold: true
     code-summary: "Show the code"
+    toc: true
+    toc-depth: 2
 editor_options: 
   chunk_output_type: console
 ---
@@ -14,6 +18,7 @@ editor_options:
 * Know how to set up a data research project.
 * Visualise data: choose an appropriate visualisation for your data; understand the layered approached typical of `ggplot2`.
 * Be able to read in, process, and store data.
+* A few advanced topics: functions; conditional execution
 
 
 ## Intro
@@ -286,6 +291,7 @@ gapminder |>
        title = "GDP per capita on Five Continents")
 ```
 
+
 ## UN Votes
 Data here directly from the library, exactly as in the case of `gapminder`.
 How many tables are we dealing with?
@@ -308,6 +314,7 @@ data.table::setDT(un_votes)[, .N, by = list(vote)]
 ```
 
 Say that we don't particularly like this representation of the data, and we would like to recode the vote variable.
+We could achieve that like so. 
 ```{r}
 # recode
 un_votes$vote_int[un_votes$vote == "yes"] <- 1L
@@ -320,16 +327,22 @@ table(un_votes$vote_int, un_votes$vote, exclude = NULL)
 Share of votes, by country.
 Check how you can do it in 2 ways, with a rough appreciation of the timing difference.
 ```{r}
-library(tictoc)
-tictoc::tic()
-un_votes |> 
-  group_by(country) |> 
-  summarise(n_votes = n(),
-            n_yes = sum(vote == "yes", na.rm = TRUE)) |> 
-  ungroup() |> 
-  mutate(pct_yes = n_yes / n_votes)
-tictoc::toc()
+#| code-fold: true
 
+library(tictoc) # library for timing
+
+# aggregation: tidyverse style ------------------------------------------------#
+tictoc::tic() # timing on
+un_votes |> 
+  group_by(country) |> # group by country
+  summarise(n_votes = n(), # count votes
+            n_yes = sum(vote == "yes", na.rm = TRUE) # count yes
+  ) |> 
+  ungroup() |> # ungroup operations
+  mutate(pct_yes = n_yes / n_votes) # create new col, no summarise
+tictoc::toc() # timing off
+
+# aggregation: data.table style -----------------------------------------------#
 tictoc::tic()
 data.table::setDT( un_votes )[
   , list(n_votes = .N,
@@ -339,9 +352,155 @@ data.table::setDT( un_votes )[
 tictoc::toc()
 ```
 
+As a more *advanced topic*, if you know you'll execute that same function over and over, you can re-package that in a `function`.
+Notice a few things:
+
+* name/position of arguments
+* default values
+* calling functions explicitly from `namespace`
+
+```{r}
+# write your first function
+summarise_votes <- function(data_in = un_votes, min_tot_votes = 10L){
+  data_in |> 
+    dplyr::summarise(n_votes = n(),
+                     n_yes = sum(vote == "yes", na.rm = TRUE)) |> 
+    dplyr::filter(n_votes >= min_tot_votes) |> 
+    dplyr::mutate(pct_yes = n_yes / n_votes) |> 
+    dplyr::arrange(dplyr::desc(pct_yes))
+}
+un_votes |> 
+  group_by(country) |> 
+  summarise_votes() # test, we should get the same answer as above ...
+```
 
 
-## EP Data (documents)
+### Trends over time in `yes` votes
+Similar to the previous case - the `gapminder` data - we may be interested in the evolutions over time. 
+In order to get that piece of info, we need to introduce another topic, namely **merges** (or **joins**).
+Indeed, that dates are recorded in the other dataset, `un_roll_calls`.
+Notice `left_join`.
+```{r}
+un_votes <- un_votes |> 
+  dplyr::left_join(
+    y = un_roll_calls |> 
+      dplyr::select(rcid, date),
+    by = "rcid")
+
+# same result, this time in base R
+# merge(un_votes, un_roll_calls,
+#       by = "rcid", 
+#       all.x = TRUE, all.y = TRUE) # left join
+```
+
+Graph the evolution over time of share of yes.
+```{r}
+un_votes |> 
+  dplyr::mutate(year = lubridate::year(date)) |> 
+  dplyr::group_by(year) |> 
+  summarise_votes() |> 
+  ggplot(aes(x = year, y = pct_yes)) +
+  geom_line() +
+  expand_limits(y = 0)
+```
+
+Again, beware of pooling.
+What if we split the overall trend by country?
+```{r}
+un_votes |> 
+  dplyr::filter(country %in% c("France", "Germany", "Sweden", "United States")) |> 
+  dplyr::mutate(year = lubridate::year(date)) |> 
+  dplyr::group_by(country, year) |> # notice we're grouping by 2 cols here
+  summarise_votes() |> 
+  ungroup() |> 
+  ggplot(aes(x = year, y = pct_yes, group = country)) +
+  geom_line(aes(colour = country)) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  expand_limits(y = 0) +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+This can become too cluttered very soon.
+How do we deal with that?
+Faceting is your friend.
+However, depending on the country, the plot may be similar or very off from the aggregate.
+So, we can remind ourselves in every graph what the overall trend is.
+Now, you can tweak your code to represent your overall trend in any way you like (e.g. regional data?). 
+```{r}
+un_votes |> 
+  dplyr::filter(country %in% c("France", "Germany", "Sweden", "United States",
+                               "Russia", "China")) |> 
+  dplyr::mutate(year = lubridate::year(date)) |> 
+  dplyr::group_by(country, year) |> # notice we're grouping by 2 cols here
+  summarise_votes() |> 
+  ungroup() |> 
+  ggplot() + # notice this is empty
+  geom_line(aes(x = year, y = pct_yes, # we're passing aes directly to geoms
+                group = country, colour = country)) + 
+  # here we're providing new data, aggregated on the fly
+  geom_line(data = un_votes |> 
+              dplyr::mutate(year = lubridate::year(date)) |> 
+              dplyr::group_by(year) |> 
+              summarise_votes() |> 
+              ungroup(),
+            aes(x = year, y = pct_yes),
+            colour="grey", linewidth=1) + 
+  facet_wrap(~ country, ncol = 2) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  expand_limits(y = 0) +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+
+## EP Data
+### How many documents in each Committee?
+How would you go about answering this question?
+
+* Find the data.
+* Get the data.
+* Process it
+* Spit back the result.
+
+```{r}
+#------------------------------------------------------------------------------#
+# Download and Process EP Open Data on Plenary Docs ----------------------------
+#------------------------------------------------------------------------------#
+
+#' Collects .csv files from the [EP Open Data Portal](https://data.europarl.europa.eu/en/datasets?language=en&order=RELEVANCE&dataThemeFamily=dataset.theme.EP_PLEN_DOC).
+#' The code then proceeds to tidy such data and write to disk.
+
+## Texts tabled: read csv & append it all together -----------------------------
+docs_csv <- c(
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2024_15_en.csv",
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2023_52_en.csv",
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2022_33_en.csv",
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2021_22_en.csv", 
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2020_14_en.csv",
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2019_5_en.csv")
+# read all .csv at once
+docs_list <- lapply(X = docs_csv, readr::read_csv)
+# append all .csv together
+plenary_docs <- data.table::rbindlist(l = docs_list, use.names=T, fill=T)
+```
+
+Extract the year feature, similar to what we id above, so that we can group the data afterwards.  
+```{r}
+# extract year
+plenary_docs$year <- lubridate::year(plenary_docs$document_date)
+# unique(plenary_docs$year) # check
+```
+
+Do we have duplicate entries in the doc id?
+```{r}
+table(plenary_docs$document_identifier, exclude = NULL) |> 
+  head()
+mean(table(plenary_docs$document_identifier, exclude = NULL))
+```
+
+No.
+
 
 
 ## Polls (EE, de, means, aggregations)
