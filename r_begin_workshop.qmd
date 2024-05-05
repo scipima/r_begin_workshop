@@ -106,7 +106,6 @@ When you click the **Render** button a document will be generated that includes 
 You can embed an R code chunk like this:
 ```{r}
 gapminder
-# knitr::kable(gapminder) |> head()
 ```
 
 A final note about the `here` [library](https://here.r-lib.org/).
@@ -130,6 +129,14 @@ What kind of variable are we dealing with?
 Let's remind ourselves.
 ```{r}
 head(gapminder)
+```
+
+We can explore the data in a more structure way, by checkin what classes dow we have as columns.
+```{r}
+str(gapminder) # classes and first values
+glimpse(gapminder) # very similar, tidyverse way
+summary(gapminder) # main stats
+# knitr::kable(gapminder) |> head()
 ```
 
 Say that we have an hypothesis regarding how life expectancy (`lifeExp`) changes in relations with GDP per capita (`gdpPercap`). 
@@ -280,6 +287,8 @@ gapminder |>
 ```
 
 ## UN Votes
+Data here directly from the library, exactly as in the case of `gapminder`.
+How many tables are we dealing with?
 ```{r}
 library(unvotes)
 un_votes <- unvotes::un_votes
@@ -290,6 +299,12 @@ Get a quick glimpse of the distribution of votes.
 ```{r}
 un_votes |> 
   count(vote, sort = TRUE)
+# again, remember we can achieve the same results in many different ways
+# base R
+with(un_votes,
+  tapply(X = vote, INDEX = vote, FUN = length) ) 
+# data.table - super fast and memory efficient, but some find syntax a bit complex
+data.table::setDT(un_votes)[, .N, by = list(vote)]
 ```
 
 
