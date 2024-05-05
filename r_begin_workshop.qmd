@@ -228,9 +228,9 @@ Notice that, by including also a `colour` parameter in the `geom_smooth` functio
 This has important consequences. 
 ```{r}
 ggplot(data = gapminder,
-            mapping = aes(x = gdpPercap,
-                          y = lifeExp,
-                          color= continent)) + 
+       mapping = aes(x = gdpPercap,
+                     y = lifeExp,
+                     color= continent)) + 
   geom_point(alpha = 0.3) +
   geom_smooth(color = "orange", se = FALSE, linewidth = 1, method = "lm") +
   scale_x_log10(labels = scales:: dollar)
@@ -240,9 +240,9 @@ Indeed, see what happens when we do not override it.
 We can immediately appreciate that the slope of our regression is radically different depending on the groups - consider this your introduction to the *dangers of pooling*. 
 ```{r}
 ggplot(data = gapminder,
-            mapping = aes(x = gdpPercap,
-                          y = lifeExp,
-                          color= continent)) + 
+       mapping = aes(x = gdpPercap,
+                     y = lifeExp,
+                     color= continent)) + 
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm") +
   scale_x_log10(labels = scales:: dollar) 
@@ -252,8 +252,8 @@ However, this has become too cluttered, and it's hard to understand what's going
 We reached saturation and need to revert to a simpler plot. 
 ```{r}
 ggplot(data = gapminder,
-            mapping = aes(x = gdpPercap,
-                          y = lifeExp)) +
+       mapping = aes(x = gdpPercap,
+                     y = lifeExp)) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", colour="orange", fill="grey90") +
   facet_wrap(~continent) + 
@@ -282,8 +282,8 @@ gapminder |>
   facet_wrap(~ continent, ncol = 2) +
   theme_minimal() +
   labs(x = "Year",
-         y = "GDP per capita",
-         title = "GDP per capita on Five Continents")
+       y = "GDP per capita",
+       title = "GDP per capita on Five Continents")
 ```
 
 ## UN Votes
@@ -302,11 +302,42 @@ un_votes |>
 # again, remember we can achieve the same results in many different ways
 # base R
 with(un_votes,
-  tapply(X = vote, INDEX = vote, FUN = length) ) 
+     tapply(X = vote, INDEX = vote, FUN = length) ) 
 # data.table - super fast and memory efficient, but some find syntax a bit complex
 data.table::setDT(un_votes)[, .N, by = list(vote)]
 ```
 
+Say that we don't particularly like this representation of the data, and we would like to recode the vote variable.
+```{r}
+# recode
+un_votes$vote_int[un_votes$vote == "yes"] <- 1L
+un_votes$vote_int[un_votes$vote == "no"] <- -1L
+un_votes$vote_int[un_votes$vote == "abstain"] <- 0L
+# check
+table(un_votes$vote_int, un_votes$vote, exclude = NULL)
+```
+
+Share of votes, by country.
+Check how you can do it in 2 ways, with a rough appreciation of the timing difference.
+```{r}
+library(tictoc)
+tictoc::tic()
+un_votes |> 
+  group_by(country) |> 
+  summarise(n_votes = n(),
+            n_yes = sum(vote == "yes", na.rm = TRUE)) |> 
+  ungroup() |> 
+  mutate(pct_yes = n_yes / n_votes)
+tictoc::toc()
+
+tictoc::tic()
+data.table::setDT( un_votes )[
+  , list(n_votes = .N,
+         n_yes = sum(vote == "yes", na.rm = TRUE)),
+  keyby = list(country)
+][, pct_yes := n_yes / n_votes][]
+tictoc::toc()
+```
 
 
 
