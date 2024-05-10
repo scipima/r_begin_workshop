@@ -323,26 +323,32 @@ un_roll_calls <- unvotes::un_roll_calls
 
 Get a quick glimpse of the distribution of votes.
 
+
+### Counting categorical variables
+
 ::: {.panel-tabset}
 
-### R tidyverse
-```{r}
+#### R tidyverse
+
+``` {.r}
 #| code-fold: show
 
 un_votes |> 
 count(vote, sort = TRUE)
 ```
 
-### Base R
-```{r}
+#### Base R
+
+``` {.r}
 #| code-fold: show
 
 with(un_votes,
 tapply(X = vote, INDEX = vote, FUN = length) ) 
 ```
 
-### R data.table
-```{r}
+#### R data.table
+
+``` {.r}
 #| code-fold: show
 
 data.table::setDT(un_votes)[, .N, by = list(vote)]
@@ -365,10 +371,14 @@ table(un_votes$vote_int, un_votes$vote, exclude = NULL)
 Share of votes, by country.
 Check how you can do it in 2 ways, with a rough appreciation of the timing difference.
 
+
+### Aggregations
+
 ::: {.panel-tabset}
 
-### tidyverse
-```{r}
+#### R tidyverse
+
+``` {.r}
 #| code-fold: show
 
 library(tictoc) # library for timing
@@ -385,8 +395,9 @@ mutate(pct_yes = n_yes / n_votes) # create new col, no summarise
 tictoc::toc() # timing off
 ```
 
-### data.table
-```{r}
+#### R data.table
+
+``` {.r}
 #| code-fold: show
 
 # aggregation: data.table style -----------------------------------------------#
@@ -402,6 +413,7 @@ tictoc::toc()
 :::
 
 
+### Functions
 As a more *advanced topic*, if you know you'll execute that same function over and over, you can re-package that in a `function`.
 Notice a few things:
 
@@ -502,9 +514,11 @@ aes(x = year, y = pct_yes),
 colour="grey", linewidth=1) + 
 facet_wrap(~ country, ncol = 2) +
 scale_y_continuous(labels = scales::label_percent()) +
+labs(colour = "") +
 expand_limits(y = 0) +
 theme_minimal() +
 theme(legend.position = "top")
+ggsave(here::here("figures", "unvotes_yesbycountry.png"), dpi=300, height=6, width=8, device="png", bg="white")
 ```
 
 
