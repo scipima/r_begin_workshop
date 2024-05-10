@@ -326,8 +326,14 @@ Get a quick glimpse of the distribution of votes.
 
 ### Counting categorical variables
 
+
+### Counting categorical variables
+
 ::: {.panel-tabset}
 
+#### R tidyverse
+
+``` {.r}
 #### R tidyverse
 
 ``` {.r}
@@ -340,12 +346,18 @@ count(vote, sort = TRUE)
 #### Base R
 
 ``` {.r}
+#### Base R
+
+``` {.r}
 #| code-fold: show
 
 with(un_votes,
 tapply(X = vote, INDEX = vote, FUN = length) ) 
 ```
 
+#### R data.table
+
+``` {.r}
 #### R data.table
 
 ``` {.r}
@@ -374,8 +386,14 @@ Check how you can do it in 2 ways, with a rough appreciation of the timing diffe
 
 ### Aggregations
 
+
+### Aggregations
+
 ::: {.panel-tabset}
 
+#### R tidyverse
+
+``` {.r}
 #### R tidyverse
 
 ``` {.r}
@@ -398,6 +416,9 @@ tictoc::toc() # timing off
 #### R data.table
 
 ``` {.r}
+#### R data.table
+
+``` {.r}
 #| code-fold: show
 
 # aggregation: data.table style -----------------------------------------------#
@@ -413,6 +434,7 @@ tictoc::toc()
 :::
 
 
+### Functions
 ### Functions
 As a more *advanced topic*, if you know you'll execute that same function over and over, you can re-package that in a `function`.
 Notice a few things:
@@ -514,10 +536,11 @@ aes(x = year, y = pct_yes),
 colour="grey", linewidth=1) + 
 facet_wrap(~ country, ncol = 2) +
 scale_y_continuous(labels = scales::label_percent()) +
-labs(colour = "") +
+labs(colour = "", x="Year", y="Share of yes (%)") +
 expand_limits(y = 0) +
 theme_minimal() +
 theme(legend.position = "top")
+ggsave(here::here("figures", "unvotes_yesbycountry.png"), dpi=300, height=6, width=8, device="png", bg="white")
 ggsave(here::here("figures", "unvotes_yesbycountry.png"), dpi=300, height=6, width=8, device="png", bg="white")
 ```
 
@@ -699,3 +722,4 @@ theme(plot.title.position = "plot",
 plot.title = element_text(face = "bold"),
 legend.position = "top")
 ```
+
