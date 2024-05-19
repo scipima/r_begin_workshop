@@ -18,7 +18,7 @@ editor_options:
 
 * Get familiar with an IDE (Integrated development environment).
 * Know how to set up a data research project.
-* Visualise data: choose an appropriate visualisation for your data; understand the layered approached typical of `ggplot2`.
+* Visualise data: choose an appropriate visualisation for your data; understand the layered approach typical of `ggplot2`.
 * Be able to read in, process, and store data.
 * A few advanced topics: functions; conditional execution, joins, loops.
 
@@ -95,11 +95,8 @@ Either knit the chunk using the little green "play" arrow to the right of the ch
 # Notice the eval = FALSE declaration in the options section of the code chunk
 
 my_packages <- c(
-  "tidyverse", "broom", "coefplot", "cowplot",
-  "gapminder", "GGally", "ggrepel", "ggridges", "gridExtra",
-  "here", "interplot", "margins", "maps", "mapproj",
-  "mapdata", "MASS", "quantreg", "rlang", "scales",
-  "survey", "srvyr", "viridis", "viridisLite", "devtools"
+  "bit", "devtools", "gapminder", "ggrepel", "here", "janitor", "scales",
+  "tidyverse", "unvotes", "vroom"
 )
 install.packages(my_packages)
 devtools::install_github("kjhealy/socviz")
