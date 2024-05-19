@@ -18,7 +18,7 @@ editor_options:
 
 * Get familiar with an IDE (Integrated development environment).
 * Know how to set up a data research project.
-* Visualise data: choose an appropriate visualisation for your data; understand the layered approach typical of `ggplot2`.
+* Visualise data: choose an appropriate visualisation for your data; understand `ggplot2`'s layered approach.
 * Be able to read in, process, and store data.
 * A few advanced topics: functions; conditional execution, joins, loops.
 
@@ -26,11 +26,11 @@ In this doc, all code chunks are folded.
 Readers are encouraged to immediately look at the code for Sections 5 and 6.
 From Sections 7 onwards, the reader can start to jot down some initial code before seeing the solution.
 
-Let's manage expectations.
+Let's manage expectations:
 
 * I tailored this workshop for a 2 hours session.
-Depending on the overall level, we might not cover all the content - that's ok, you still get this document if you want to explore further. 
-* I won't be able to enter any detail about R itself, statistics, or visualisation - and that's also ok. 
+Depending on the overall level, we might not cover all the content - *that's ok*, you still get this [document](https://github.com/scipima/r_begin_workshop) if you want to explore further. 
+* I won't be able to enter any detail about R itself, statistics, or visualisation - and *that's also ok*. 
 * The main objective here really is to give you a flavour of a few of the things that can be currently achieved with the kinds of software and hardware we have at our disposal.
 
 I *assume* that you are now staring at an IDE - be it RStudio or VS Code - as per the email that was shared with you. 
@@ -39,15 +39,15 @@ Please shout if that is not the case!
 
 ## Intro
 For this workshop, we borrow heavily from [Data Visualization for Social Science](https://socviz.co/index.html#preface).
-This very markdown is based off the R package accompanying the book. 
+This very markdown is based off the `R` package accompanying the book. 
 You can use it to take notes, write your code, and produce a good-looking, reproducible document that records the work you have done. 
 
-At the very top of the file is a section of *metadata*, or information about what the file is and what it does. 
+At the very top of the file is a section of *metadata*, or information about what the file is and what it does.
 The metadata is delimited by three dashes at the start and another three at the end.
-You should change the title, author, and date to the values that suit you. 
-Keep the `output` line as it is for now, however. 
-Each line in the metadata has a structure. 
-First the *key* ("title", "author", etc.), then a colon, and then the *value* associated with the key.  
+You can/should change the title, author, and date to the values that suit you.
+Keep the `output` line as it is for now, however.
+Each line in the metadata has a structure.
+First the *key* ("title", "author", etc.), then a colon, and then the *value* associated with the key.
 It is very picky when it comes with indentations, characters used, etc..
 
 
@@ -62,9 +62,9 @@ When you do, an empty chunk will appear:
 ```
 
 Code chunks are delimited by three backticks (found to the left of the 1 key on US and UK keyboards) at the start and end.
-The opening backticks also have a pair of braces and the letter `r`, to indicate what language the chunk is written in. 
-You write your code inside the code chunks. 
-Write your notes and other material around them, as here. 
+The opening backticks also have a pair of braces and the letter `r`, to indicate what language the chunk is written in (this is a clue to the fact that you can have multiple programming language in the document, such as `Python`, or `Bash`, or `SQL`).
+You write your code inside the code chunks.
+Write your notes and other material around them, as here.
 
 
 ## Know your editor
@@ -76,13 +76,13 @@ Some of the most important things to learn now:
 * Environment
 
 For this workshop, we rely on RStudio.
-An alternative you may explore is [VS Code](https://code.visualstudio.com/). 
+An alternative you may explore is [VS Code](https://code.visualstudio.com/).
 
 
 ## Before you begin to explore and analyse, set up your workspace
 A number of functions and packages come already installed in what is generally referred to as `R base` (and you can actually see what's in it by typing `base::` in your console, and let the auto-complete suggest you the full list of functions ... ).
 However, most of the things we'll do in this workshop need further `libraries`.
-To install the `tidyverse`, make sure you have an Internet connection. 
+To install them, make sure you have an Internet connection. 
 Then *manually* run the code in the chunk below. 
 If you just render the document, this will be skipped - **however, if this is the first time you run this, make sure to manually run the code chunk below**. 
 We do this because you only need to install these packages once, not every time you run this file. 
@@ -100,11 +100,17 @@ my_packages <- c(
 )
 install.packages(my_packages)
 devtools::install_github("kjhealy/socviz")
+
+# repo set-up -----------------------------------------------------------------#
+# check if directory exists to dump processed files, figures, etc.
+if ( !dir.exists(here::here("figures") ) ) {
+  # if the directory does not exist, create it
+  dir.create(here::here("figures") ) }
 ```
 
 
-## Set Up Your Project and Load Libraries
-To begin we must load some libraries we will be using. 
+### Load Libraries
+Once you installed your libraries, each time your run this document you **must** load them. 
 If we do not load them, R will not be able to find the functions contained in these libraries. 
 The `tidyverse` includes `ggplot2` (for data visualisation) and other libraries such as `dplyr` (for data manipulation).
 We also load the `socviz` and `gapminder` libraries.
@@ -120,10 +126,10 @@ library(socviz)
 ```
 
 Notice that here an option is set: `include=FALSE`. 
-This tells R to run this code but not to include the output in the final document. 
+This tells `R` to run this code but not to include the output in the final document. 
 
-When you click the **Render** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
-You can embed an R code chunk like this:
+When you click the **Render** button a document will be generated that includes both content as well as the output of any embedded `R` code chunks within the document.
+You can embed an `R` code chunk like this:
 ```{r}
 #| code-fold: show
 
@@ -132,42 +138,44 @@ gapminder::gapminder
 
 A final note about the `here` [library](https://here.r-lib.org/).
 That is a great help if you have properly set up your project as I just indicated. 
-All paths will become relatively, and you can forget about remembering where you are in your machine. 
-The essential thing is that it relies on the `.RProject` file that is created automatically for you when you create a `Project` with `RStudio`. 
+All paths will become relative, and you can forget about remembering where you are in your machine.
+The essential thing is that it relies on the `.RProject` file that is created automatically for you when you create a `Project` with `RStudio`.
 
 
 ## Data Visualisation
 ### Few initial words
-R has a consolidated role in data visualisation, well beyond the initial remit of statistics. 
+`R` has a consolidated role in data visualisation, well beyond the initial remit of statistics. 
 A few examples:
 
-* R at FT: https://johnburnmurdoch.github.io/slides/r-ggplot/#/
-* Resources compiled by people from Posit: https://themockup.blog/static/slides/intro-plot#1
+* `R` at [FT](https://johnburnmurdoch.github.io/slides/r-ggplot/#/).
+* `R` at [BBC](https://bbc.github.io/rcookbook/?ck_subscriber_id=2670369721&utm_source=convertkit&utm_medium=email&utm_campaign=What%E2%80%99s%20New%20in%20R:%20May%206,%202024%20-%2013817383).
+* `R` in the *Best Practices for Data Visualisation* of the [Royal Statistical Society](https://royal-statistical-society.github.io/datavisguide/?ck_subscriber_id=2670369721&utm_source=convertkit&utm_medium=email&utm_campaign=What%E2%80%99s%20New%20in%20R:%20May%206,%202024%20-%2013817383). 
+* Resources compiled by people from [Posit](https://themockup.blog/static/slides/intro-plot#1).
 
 
 ### Let's start with some actual code
 Let's go back to the `gapminder` data we saw before. 
-What kind of variable are we dealing with?
+What kind of variables are we dealing with?
 Let's remind ourselves.
 ```{r}
 head(gapminder)
 ```
 
-We can explore the data in a more structure way, by checking what classes do we have as columns.
+We can explore the data in a more structure way, by checking what classes do we have as columns, and get some descriptive statistics.
 ```{r}
 #| code-fold: show
 
 str(gapminder) # classes and first values
 glimpse(gapminder) # very similar, tidyverse way
 summary(gapminder) # main stats
-# knitr::kable(gapminder) |> head()
 ```
 
 Say that we have an hypothesis regarding how life expectancy (`lifeExp`) changes in relations with GDP per capita (`gdpPercap`). 
-As these look like continuous variables, we could plot them in a scatterplot.
+As these look like continuous variables, we could plot them in a [scatterplot](https://r-graph-gallery.com/).
 There are at least two ways to create a plot within `ggplot`.
+As you'll see, there are usually multiple ways to achieve the exact same output with these programming languages.
 
-* We can assign a ggplot plot to an object called `p` (the name doesn't matter, we can call it `mike` if we want to), and then add (literally, using `+`) layers on top of it.
+* We can **assign** a ggplot plot to an object called `p` (the name doesn't matter, we can call it `mike` if we want to), and then add (literally, using `+`) layers on top of it.
 ```{r}
 #| code-fold: show
 
