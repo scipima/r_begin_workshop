@@ -30,7 +30,7 @@ Let's manage expectations:
 
 * I tailored this workshop for a 2 hours session.
 Depending on the overall level, we might not cover all the content - *that's ok*, you still get this [document](https://github.com/scipima/r_begin_workshop) if you want to explore further. 
-* I won't be able to enter any detail about R itself, statistics, or visualisation - and *that's also ok*. 
+* I won't be able to enter into any detail about R itself, statistics, or visualisation - and *that's also ok*. 
 * The main objective here really is to give you a flavour of a few of the things that can be currently achieved with the kinds of software and hardware we have at our disposal.
 
 I *assume* that you are now staring at an IDE - be it RStudio or VS Code - as per the email that was shared with you. 
@@ -47,16 +47,16 @@ The metadata is delimited by three dashes at the start and another three at the 
 You can/should change the title, author, and date to the values that suit you.
 Keep the `output` line as it is for now, however.
 Each line in the metadata has a structure.
-First the *key* ("title", "author", etc.), then a colon, and then the *value* associated with the key.
+First the *key* (`title`, `author`, etc.), then a colon, and then the *value* associated with the key.
 It is very picky when it comes with indentations, characters used, etc..
 
 
 ### This is a Quarto File
 [Markdown](http://rmarkdown.rstudio.com) is a simple formatting syntax for authoring HTML, PDF, and MS Word documents, and is also the basis for [Quarto](https://quarto.org/). 
 
-When you click the **Render** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
+When you click the **Render** button a document will be generated that includes both content as well as the output of any embedded `R` code chunks within the document. 
 A *code chunk* is a specially delimited section of the file. 
-You can add one by moving the cursor to a blank line choosing Code > Insert Chunk from the RStudio menu. 
+You can add one by moving the cursor to a blank line choosing `Code` > `Insert Chunk` from the RStudio menu. 
 When you do, an empty chunk will appear:
 ```{r}
 ```
@@ -162,6 +162,8 @@ Let's remind ourselves.
 head(gapminder)
 ```
 
+Technically, this data is in a long format, and you can immediately spot it by looking at the repeated values in the first 2 columns.
+An example of a data in wide format is provided by [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/sdg_08_10/default/table?lang=en).
 We can explore the data in a more structure way, by checking what classes do we have as columns, and get some descriptive statistics.
 ```{r}
 #| code-fold: show
