@@ -374,10 +374,12 @@ gapminder |>
 ```
 
 A few takeaways from this.
-First, our visualisation obviously brings the reader's attention to the blue, grouped trend line by continent.
+
+* First, our visualisation obviously brings the reader's attention to the blue trend line by continent.
 For instace, the value at the end of the time series for the grouped trend line in Asia is roughly where the start of the grouped time series is in Europe.
-Second, pay attention to the larger variation surrounding the trend line in continents such as Asia and Africa compared to the relatively tighted distribution in Europe.
-Inter alia, this would have substantial consequences were we to fit a model to this data: the larger variance in the former continents would mean larger uncertainty in our estimates compared to the European case.
+* Second, pay attention to the larger variation surrounding the trend line in continents such as Asia and Africa compared to the relatively tighter distribution in Europe.
+Inter alia, this would have substantial consequences were we to fit a model to such data: the larger variance in the former continents would mean larger uncertainty in our estimates compared to the European case.
+In another case that you may be familiar with, this could happen to parties' polls, where we could have substantial variation in the polls translating into larger margin of errors in projections.
 ```{r}
 rm(p)
 ```
