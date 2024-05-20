@@ -162,9 +162,10 @@ Let's remind ourselves.
 head(gapminder)
 ```
 
-Technically, this data is in a long format, and you can immediately spot it by looking at the repeated values in the first 2 columns.
-An example of a data in wide format is provided by [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/sdg_08_10/default/table?lang=en).
-We can explore the data in a more structure way, by checking what classes do we have as columns, and get some descriptive statistics.
+Technically, this data is in a *long* format, and you can immediately spot it by looking at the repeated values in the first 2 columns.
+An example of a data in *wide* format is provided by [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/sdg_08_10/default/table?lang=en).
+
+We can explore the data in a more structured way, by checking what classes do we have as columns, and get some descriptive statistics.
 ```{r}
 #| code-fold: show
 
@@ -173,7 +174,10 @@ glimpse(gapminder) # very similar, tidyverse way
 summary(gapminder) # main stats
 ```
 
-Say that we have an hypothesis regarding how life expectancy (`lifeExp`) changes in relations with GDP per capita (`gdpPercap`). 
+Let's now start to analyse the data.
+Say that we have an hypothesis regarding how life expectancy (`lifeExp`) changes in relations with GDP per capita (`gdpPercap`).
+More precisely, we may think that as GDP per capita increases, so should life expectancy.
+Graphically, if we look back at our data at hands, we should see dots amassing in lower left part and upper right section of our graph. 
 As these look like continuous variables, we could plot them in a [scatterplot](https://r-graph-gallery.com/).
 There are at least two ways to create a plot within `ggplot`.
 As you'll see, there are usually multiple ways to achieve the exact same output with these programming languages.
