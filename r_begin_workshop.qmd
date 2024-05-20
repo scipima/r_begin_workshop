@@ -174,10 +174,12 @@ glimpse(gapminder) # very similar, tidyverse way
 summary(gapminder) # main stats
 ```
 
+Notice how we use functions in `R`: we call a function - in the chunk above, `str`, `glimpse`, `summary` - and then include an argument between parentheses - in this case, the entire dataset.
+
 Let's now start to analyse the data.
 Say that we have an hypothesis regarding how life expectancy (`lifeExp`) changes in relations with GDP per capita (`gdpPercap`).
 More precisely, we may think that as GDP per capita increases, so should life expectancy.
-Graphically, if we look back at our data at hands, we should see dots amassing in lower left part and upper right section of our graph. 
+Graphically, if we look back at our data, we should see dots amassing in lower-left and upper-right sections of our graph. 
 As these look like continuous variables, we could plot them in a [scatterplot](https://r-graph-gallery.com/).
 There are at least two ways to create a plot within `ggplot`.
 As you'll see, there are usually multiple ways to achieve the exact same output with these programming languages.
@@ -457,7 +459,7 @@ I'll walk you through just the `tidyverse` implementation.
 * we call the data
 * we group by a variable of interest
 * we squash all the data by the grouping variable, and calculate two new variables, namely the total votes, and the number of yes.
-* we close the grouped calculations by calling off the group_by - that is, ungroup
+* we close the grouped calculations by calling off the `group_by` - that is, `ungroup()`
 * we create a new variable, which is just the share
 
 
@@ -531,10 +533,11 @@ summarise_votes <- function(data_in = un_votes, min_tot_votes = 10L) {
         dplyr::mutate(pct_yes = n_yes / n_votes) |>
         dplyr::arrange(dplyr::desc(pct_yes)) # arrange by pct_yes
 }
-# test
+
+# test, we should get the same answer as above ... -------------------------------#
 un_votes |>
     group_by(country) |>
-    summarise_votes() |> # test, we should get the same answer as above ...
+    summarise_votes() |> 
     ungroup()
 ```
 
@@ -542,7 +545,7 @@ un_votes |>
 ### Trends over time in `yes` votes
 Similar to the previous case - the `gapminder` data - we may be interested in the evolution over time. 
 In order to get that piece of info, we need to introduce another topic, namely **merges** (or **joins**).
-Indeed, that dates are recorded in the other dataset, `un_roll_calls`.
+Indeed, votes' dates are recorded in the other dataset, `un_roll_calls`.
 Notice the use of `left_join`.
 ```{r}
 #| code-fold: show
@@ -629,7 +632,8 @@ un_votes |>
     expand_limits(y = 0) +
     theme_minimal() +
     theme(legend.position = "top")
-ggsave(here::here("figures", "unvotes_yesbycountry.png"), dpi = 300, height = 6, width = 8, device = "png", bg = "white")
+ggsave(here::here("figures", "unvotes_yesbycountry.png"), 
+    dpi = 300, height = 6, width = 8, device = "png", bg = "white")
 ```
 
 ```{r}
@@ -730,7 +734,7 @@ plenary_docs |>
 ```
 
 However, we're not done here.
-If we actually check the tail of the table above (by simply running `tail()`), we can notice something weird. 
+If we actually check the tail of the table above - by simply running `tail()` -, we can notice something weird. 
 ```{r}
 #| code-fold: show
 
@@ -821,6 +825,11 @@ plenary_docs |>
     ) +
     labs(x = "", y = "Count") +
     theme_minimal()
+```
+
+```{r}
+#| include: false
+rm(plenary_docs); gc()
 ```
 
 
