@@ -30,7 +30,7 @@ Let's manage expectations:
 
 * I tailored this workshop for a 2 hours session.
 Depending on the overall level, we might not cover all the content - *that's ok*, you still get this [document](https://github.com/scipima/r_begin_workshop) if you want to explore further. 
-* I won't be able to enter into any detail about R itself, statistics, or visualisation - and *that's also ok*. 
+* I won't be able to enter into any detail about `R` itself, statistics, or visualisation - and *that's also ok*. 
 * The main objective here really is to give you a flavour of a few of the things that can be currently achieved with the kinds of software and hardware we have at our disposal.
 
 I *assume* that you are now staring at an IDE - be it RStudio or VS Code - as per the email that was shared with you. 
@@ -103,7 +103,7 @@ devtools::install_github("kjhealy/socviz")
 
 # repo set-up -----------------------------------------------------------------#
 # check if directory exists to dump processed files, figures, etc.
-if (!dir.exists(here::here("figures"))) {
+if ( !dir.exists( here::here("figures") ) ) {
     # if the directory does not exist, create it
     dir.create(here::here("figures"))
 }
@@ -377,7 +377,7 @@ gapminder |>
     labs(
         x = "Year",
         y = "GDP per capita",
-        title = "GDP per capita on Five Continents"
+        title = "GDP per capita on five continents (1952-2007)"
     )
 ```
 
@@ -581,7 +581,6 @@ What if we split the overall trend by country?
 ```{r}
 un_votes |>
     dplyr::filter(country %in% c("France", "Germany", "Sweden", "United States")) |>
-    dplyr::mutate(year = lubridate::year(date)) |>
     dplyr::group_by(country, year) |> # notice we're grouping by 2 cols here
     summarise_votes() |>
     ungroup() |>
@@ -603,11 +602,9 @@ Now, you can tweak your code to represent your overall trend in any way you like
 un_votes |>
     dplyr::filter(
         country %in% c(
-            "France", "Germany", "Sweden", "United States",
-            "Russia", "China"
+            "France", "Germany", "Sweden", "United States", "Russia", "China"
         )
     ) |>
-    dplyr::mutate(year = lubridate::year(date)) |>
     dplyr::group_by(country, year) |> # notice we're grouping by 2 cols here
     summarise_votes() |>
     ungroup() |>
@@ -619,7 +616,6 @@ un_votes |>
     # here we're providing new data, aggregated on the fly
     geom_line(
         data = un_votes |>
-            dplyr::mutate(year = lubridate::year(date)) |>
             dplyr::group_by(year) |>
             summarise_votes() |>
             ungroup(),
