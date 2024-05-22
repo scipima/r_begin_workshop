@@ -14,9 +14,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Learning objectives
+## Intro & Learning objectives
 
-* Get familiar with an IDE (Integrated development environment).
+* Get familiar with an IDE (Integrated Development Environment).
 * Know how to set up a data research project.
 * Visualise data: choose an appropriate visualisation for your data; understand `ggplot2`'s layered approach.
 * Be able to read in, process, and store data.
@@ -26,7 +26,7 @@ In this doc, all code chunks are folded.
 Readers are encouraged to immediately look at the code for Sections 5 and 6.
 From Sections 7 onwards, the reader can start to jot down some initial code before seeing the solution.
 
-Let's manage expectations:
+Let's **manage expectations**:
 
 * I tailored this workshop for a 2 hours session.
 Depending on the overall level, we might not cover all the content - *that's ok*, you still get this [document](https://github.com/scipima/r_begin_workshop) if you want to explore further. 
@@ -48,7 +48,7 @@ You can/should change the title, author, and date to the values that suit you.
 Keep the `output` line as it is for now, however.
 Each line in the metadata has a structure.
 First the *key* (`title`, `author`, etc.), then a colon, and then the *value* associated with the key.
-It is very picky when it comes with indentations, characters used, etc..
+It is very picky when it comes with indentations, characters used, etc., so be very careful if you start tweaking it.
 
 
 ### This is a Quarto File
@@ -61,10 +61,10 @@ When you do, an empty chunk will appear:
 ```{r}
 ```
 
-Code chunks are delimited by three backticks (found to the left of the 1 key on US and UK keyboards) at the start and end.
+Code chunks are delimited by three backticks, that is "`".
 The opening backticks also have a pair of braces and the letter `r`, to indicate what language the chunk is written in (this is a clue to the fact that you can have multiple programming language in the document, such as `Python`, or `Bash`, or `SQL`).
 You write your code inside the code chunks.
-Write your notes and other material around them, as here.
+Write your notes and other material around them.
 
 
 ## Know your editor
@@ -173,12 +173,13 @@ Notice how we use functions in `R`: we call a function - in the chunk above, `st
 Let's now start to analyse the data.
 Say that we have an hypothesis regarding how life expectancy (`lifeExp`) changes in relations with GDP per capita (`gdpPercap`).
 More precisely, we may think that as GDP per capita increases, so should life expectancy.
-Graphically, if we look back at our data, we should see dots amassing in lower-left and upper-right sections of our graph. 
 As these look like continuous variables, we could plot them in a [scatterplot](https://r-graph-gallery.com/).
-There are at least two ways to create a plot within `ggplot`.
+Graphically, if we look back at our data, we should see dots amassing in lower-left and upper-right sections of our graph.
+
+There are at least two ways to create a plot within `ggplot()`.
 As you'll see, there are usually multiple ways to achieve the exact same output with these programming languages.
 
-* We can **assign** a ggplot plot to an object called `p` (the name doesn't matter, we can call it `mike` if we want to), and then add (literally, using `+`) layers on top of it.
+* We can **assign** - with this symbol `<-` - a `ggplot()` plot to an object called `p` (the name doesn't matter, we can call it `mike` if we want to), and then add (literally, using `+`) layers on top of it.
 ```{r}
 #| code-fold: show
 
@@ -200,7 +201,7 @@ p + geom_point() # and you can keep on adding to this, see below ...
 
 #------------------------------------------------------------------------------#
 gapminder |> # pass the data along the pipe
-    ggplot(aes(x = gdpPercap, y = lifeExp)) + # no need to call the data, it is already piped in
+    ggplot(aes(x = gdpPercap, y = lifeExp)) + # no need to call the data
     geom_point() # layered ggplot approach
 ```
 
@@ -214,7 +215,6 @@ Thus, we can add a layer on top of that ggplot object, that is the `geom_point`.
 Let's go back to the graph now.
 Sometimes, when we face a cloud like the one above, it is useful to plot a trendline on top, to understand the overall pattern. 
 ```{r}
-# geom_smooth() using method = 'gam' and formula 'y ~ s(x, bs = "cs")' - GAM stands for generalised additive model
 p + geom_point() +
     geom_smooth()
 ```
@@ -266,7 +266,7 @@ The viz above already is way more informative than the ones before, but there is
 For instance, now it may make sense to re-introduce the `lm` method we used before. 
 
 In passing, also notice the use of different parameters in the viz. 
-The `se` option commands the standard error, and we can switch it off by imputing `se=FALSE`. 
+The `se` option commands the *standard error*, and we can switch it off by imputing `se=FALSE`. 
 The `alpha` regulates the transparency of the objects, from 0 to 1. 
 Further, we can add info and make more it *publication ready*.
 ```{r}
@@ -293,11 +293,14 @@ ggplot(
     theme_minimal()
 ```
 
-Another way to think about the underlying data is to remind ourselves about the groups we have, represented by the `continent` variable.
+Another way to think about the underlying data is to remind ourselves about the **groups** we have, represented by the `continent` variable.
 In the code below, we include colours as an aesthetic, and map it on continents.
 Notice that, by including also a `colour` parameter in the `geom_smooth` function, we are overriding the `colour` mapping in the `ggplot` function.
-This has important consequences, and is a further example of the **sequential** execution typical of many programming languages (left-right, top-bottom). 
+This has important consequences, and is a further example of the **sequential** execution typical of many programming languages (left -> right, top -> bottom). 
 ```{r}
+#| code-fold: show
+
+#------------------------------------------------------------------------------#
 ggplot(
     data = gapminder,
     mapping = aes(
@@ -312,8 +315,11 @@ ggplot(
 ```
 
 Indeed, see what happens when we do not override it.
-We can immediately appreciate that the slope of our regression is radically different depending on the groups - consider this your introduction to the *dangers of pooling*. 
+We can immediately appreciate that the slopes of our regression are radically different depending on the groups - consider this your introduction to the *dangers of pooling*. 
 ```{r}
+#| code-fold: show
+
+#------------------------------------------------------------------------------#
 ggplot(
     data = gapminder,
     mapping = aes(
@@ -357,7 +363,6 @@ ggplot(
 What you observe above is variously termed as a *small multiple* visualisation, or *faceted* visualisation. 
 The key point is that we break down the data in meaningful groups, and analyse them separately.
 This enables us to see more clearly similarities and differences.
-Remember, all analyses are comparisons. 
 
 A radically different take is to exploit the **time dimension**.
 ```{r}
