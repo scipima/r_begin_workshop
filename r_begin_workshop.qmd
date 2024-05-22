@@ -130,12 +130,6 @@ Notice that here an option is set: `include=FALSE`.
 This tells `R` to run this code but not to include the output in the final document. 
 
 When you click the **Render** button a document will be generated that includes both content as well as the output of any embedded `R` code chunks within the document.
-You can embed an `R` code chunk like this:
-```{r}
-#| code-fold: show
-
-gapminder::gapminder
-```
 
 A final note about the `here` [library](https://here.r-lib.org/).
 That is a great help if you have properly set up your project as I just indicated. 
@@ -155,9 +149,8 @@ A few examples:
 
 
 ### Let's start with some actual code
-Let's go back to the `gapminder` data we saw before. 
+Let's open up the `gapminder` dataset. 
 What kind of variables are we dealing with?
-Let's remind ourselves.
 ```{r}
 head(gapminder)
 ```
@@ -169,12 +162,13 @@ We can explore the data in a more structured way, by checking what classes do we
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 str(gapminder) # classes and first values
 glimpse(gapminder) # very similar, tidyverse way
 summary(gapminder) # main stats
 ```
 
-Notice how we use functions in `R`: we call a function - in the chunk above, `str`, `glimpse`, `summary` - and then include an argument between parentheses - in this case, the entire dataset.
+Notice how we use functions in `R`: we call a function - in the chunk above, `str()`, `glimpse()`, `summary()` - and then include an argument between parentheses - in this case, the entire dataset.
 
 Let's now start to analyse the data.
 Say that we have an hypothesis regarding how life expectancy (`lifeExp`) changes in relations with GDP per capita (`gdpPercap`).
@@ -188,6 +182,7 @@ As you'll see, there are usually multiple ways to achieve the exact same output 
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 p <- ggplot(
     data = gapminder,
     mapping = aes(
@@ -203,15 +198,16 @@ p + geom_point() # and you can keep on adding to this, see below ...
 #| eval: false
 #| code-fold: show
 
-gapminder |> # pipe
-    ggplot(aes(x = gdpPercap, y = lifeExp)) + # layered ggplot approach
-    geom_point()
+#------------------------------------------------------------------------------#
+gapminder |> # pass the data along the pipe
+    ggplot(aes(x = gdpPercap, y = lifeExp)) + # no need to call the data, it is already piped in
+    geom_point() # layered ggplot approach
 ```
 
 Let's unpack what happens in the code above:
 
-* we grab the data by calling gapminder
-* on this data, we apply a function, namely ggplot
+* we grab the data by calling `gapminder`
+* on this data, we apply a function, namely `ggplot()`
 * calling a function on that data means we get the exact same output as the `p` object above.
 Thus, we can add a layer on top of that ggplot object, that is the `geom_point`.
 
@@ -276,6 +272,7 @@ Further, we can add info and make more it *publication ready*.
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 ggplot(
     data = gapminder,
     mapping = aes(
@@ -335,6 +332,7 @@ We reached saturation and need to revert to a simpler plot.
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 ggplot(
     data = gapminder,
     mapping = aes(
@@ -365,6 +363,7 @@ A radically different take is to exploit the **time dimension**.
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 gapminder |>
     # subset the data to just the rows with these continents
     filter(continent %in% c("Asia", "Africa", "Europe", "Americas")) |>
@@ -413,6 +412,7 @@ If we want to get a quick glimpse of the distribution of votes, we could just si
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 un_votes |>
     count(vote, sort = TRUE)
 ```
@@ -422,6 +422,7 @@ un_votes |>
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 with(
     un_votes,
     tapply(X = vote, INDEX = vote, FUN = length)
@@ -433,6 +434,7 @@ with(
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 data.table::setDT(un_votes)[, .N, by = list(vote)]
 ```
 
@@ -470,6 +472,7 @@ I'll walk you through just the `tidyverse` implementation.
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 library(tictoc) # library for timing
 
 # aggregation: tidyverse style ------------------------------------------------#
@@ -492,6 +495,7 @@ tictoc::toc() # timing off
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 # aggregation: data.table style -----------------------------------------------#
 tictoc::tic()
 
@@ -522,6 +526,7 @@ Notice a few things:
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 # write your first function
 summarise_votes <- function(data_in = un_votes, min_tot_votes = 10L) {
     data_in |>
@@ -550,6 +555,7 @@ Notice the use of `left_join`.
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 un_votes <- un_votes |> # start with this data
     dplyr::left_join( # join only the matches in the origin data
         y = un_roll_calls |> # from this data, we keep only the matches in the incoming data from the pipe
@@ -684,9 +690,10 @@ plenary_docs <- data.table::rbindlist(l = docs_list, use.names = T, fill = T)
 #------------------------------------------------------------------------------#
 ```
 
-```{r}
-#| include: false
-rm(docs_list); gc()
+```
+#------------------------------------------------------------------------------#
+rm(docs_list, docs_csv)
+gc()
 ```
 
 Extract the year feature, similar to what we did above, so that we can group the data afterwards.  
@@ -719,6 +726,7 @@ We need to filter on the string to get just the pattern of interest, namely `Com
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 plenary_docs |>
     dplyr::filter(
         grepl(
@@ -736,6 +744,7 @@ If we actually check the tail of the table above - by simply running `tail()` -,
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 plenary_docs |>
     dplyr::filter(
         grepl(
@@ -758,6 +767,7 @@ We need to split the cells that contain multiple Committees.
 ```{r}
 #| code-fold: show
 
+#------------------------------------------------------------------------------#
 comm_doc_count <- plenary_docs |>
     dplyr::filter(
         grepl(
@@ -796,6 +806,7 @@ Now, try to come up with your solution: what if you wanted also to know the volu
 #| warning: false
 #| message: false
 
+#------------------------------------------------------------------------------#
 plenary_docs |>
     dplyr::filter(grepl(
         pattern = "Committee on ",
@@ -827,6 +838,8 @@ plenary_docs |>
 
 ```{r}
 #| include: false
+
+#------------------------------------------------------------------------------#
 rm(plenary_docs); gc()
 ```
 
@@ -895,5 +908,8 @@ ee_long |>
 
 ```{r}
 #| include: false
+
+#------------------------------------------------------------------------------#
 rm(ee, ee_long); gc()
 ```
+
