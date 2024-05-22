@@ -633,10 +633,10 @@ ggsave(here::here("figures", "unvotes_yesbycountry.png"),
 ```
 
 ```{r}
+#| include: false
 rm(un_roll_calls, un_votes, summarise_votes)
 gc()
 ```
-
 
 
 ## EP Data
@@ -682,9 +682,11 @@ plenary_docs <- data.table::rbindlist(l = docs_list, use.names = T, fill = T)
 #   print(i_doc)
 #   docs_list[[i_doc]] <- read.csv(file = i_doc) }
 #------------------------------------------------------------------------------#
+```
 
-rm(docs_list, docs_csv)
-gc()
+```{r}
+#| include: false
+rm(docs_list); gc()
 ```
 
 Extract the year feature, similar to what we did above, so that we can group the data afterwards.  
@@ -829,8 +831,8 @@ rm(plenary_docs); gc()
 ```
 
 
-## Polls (EE, de, means, aggregations)
-This section is the most advanced.
+## Polls
+This section shows you how you can download, process, and plot polls data relative to one country.
 Polls are extracted from [EuropeElects](https://europeelects.eu/germany/).
 ```{r}
 #| fig-width: 8
@@ -889,4 +891,9 @@ ee_long |>
         plot.title = element_text(face = "bold"),
         legend.position = "top"
     )
+```
+
+```{r}
+#| include: false
+rm(ee, ee_long); gc()
 ```
