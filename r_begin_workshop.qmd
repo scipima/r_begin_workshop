@@ -19,8 +19,8 @@ editor_options:
 * Get familiar with an IDE (Integrated Development Environment).
 * Know how to set up a data research project.
 * Visualise data: choose an appropriate visualisation for your data; understand `ggplot2`'s layered approach.
-* Be able to read in, process, and store data.
-* A few advanced topics: functions; conditional execution, joins, loops.
+* Be able to read in, process, and store/output data.
+* A few advanced topics: functions, conditional execution, joins, loops.
 
 In this doc, all code chunks are folded.
 Readers are encouraged to immediately look at the code for Sections 5 and 6.
@@ -61,7 +61,7 @@ When you do, an empty chunk will appear:
 ```{r}
 ```
 
-Code chunks are delimited by three backticks, that is "`".
+Code chunks are delimited by three backticks.
 The opening backticks also have a pair of braces and the letter `r`, to indicate what language the chunk is written in (this is a clue to the fact that you can have multiple programming language in the document, such as `Python`, or `Bash`, or `SQL`).
 You write your code inside the code chunks.
 Write your notes and other material around them.
