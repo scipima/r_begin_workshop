@@ -610,6 +610,7 @@ However, depending on the country, the plot may be similar or way off from the a
 So, we can remind ourselves in every graph what the overall trend is.
 Now, you can tweak your code to represent your overall trend in any way you like (e.g. regional data?). 
 ```{r}
+dir.create(path = here::here("figures"))
 un_votes |>
     dplyr::filter(
         country %in% c(
