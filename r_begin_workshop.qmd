@@ -96,7 +96,7 @@ Either knit the chunk using the little green "play" arrow to the right of the ch
 
 my_packages <- c(
     "bit", "devtools", "gapminder", "ggrepel", "here", "janitor", "scales",
-    "tidyverse", "unvotes", "vroom"
+    "tictoc", "tidyverse", "unvotes", "vroom"
 )
 install.packages(my_packages)
 devtools::install_github("kjhealy/socviz")
