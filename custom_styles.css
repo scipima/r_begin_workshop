@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'EuropeaNarrow';
+  src: url('data_reference/ep_graphics/fonts/EuropeaNarrow-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'EuropeaNarrow';
+  src: url('data_reference/ep_graphics/fonts/EuropeaNarrow-Bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'EuropeaNarrowSemibold';
+  src: url('data_reference/ep_graphics/fonts/EuropeaNarrow-Semibold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body, h1, h2, h3, h4, h5, h6 {
+  font-family: 'EuropeaNarrow', sans-serif;
+}

@@ -7,9 +7,10 @@ format:
     code-fold: true
     code-summary: "Show the code"
     toc: true
-    toc-depth: 2
+    toc-depth: 3
     number-sections: true
     number-depth: 3
+    css: custom_styles.css
 editor_options: 
   chunk_output_type: console
 ---
@@ -273,6 +274,45 @@ Further, we can add info and make more it *publication ready*.
 #| code-fold: show
 
 #------------------------------------------------------------------------------#
+## Libraries -------------------------------------------------------------------
+pacman::p_load(char = c("ggplot2", "ggiraph", "ggtext", "showtext", "sysfonts",
+                        "tinytable") )
+
+#------------------------------------------------------------------------------#
+## Graphic Parameters ----------------------------------------------------------
+# Load custom font
+sysfonts::font_add(
+  family = "EuropeaNarrow",
+  regular = here::here("data_reference", "ep_graphics", "fonts", "EuropeaNarrow-Regular.otf"),
+  bold = here::here("data_reference", "ep_graphics", "fonts", "EuropeaNarrow-Bold.otf")
+)
+sysfonts::font_add(
+  family = "EuropeaNarrowSemibold",
+  regular = here::here("data_reference", "ep_graphics", "fonts", "EuropeaNarrow-Semibold.otf")
+)
+showtext::showtext_auto()  # Enable showtext for rendering
+
+
+#------------------------------------------------------------------------------#
+# Set default ggplot theme for all plots
+ggplot2::theme_set(
+  theme_minimal(base_family = "EuropeaNarrow") +
+    theme(
+      plot.title.position = "plot",
+      plot.title = element_text(face = "bold"),
+      plot.caption.position = "plot",
+      plot.caption = element_markdown(hjust = 0, size = 20),
+      strip.text = element_text(family = "EuropeaNarrowSemibold", size=25),
+      panel.grid.minor = element_blank(),
+      panel.spacing.x = unit(1.5, "lines"),
+      axis.text.y = element_text(size = 30),
+      axis.text.x = element_text(size = 30),
+    )
+)
+
+
+#------------------------------------------------------------------------------#
+# Plot
 ggplot(
     data = gapminder,
     mapping = aes(
@@ -289,8 +329,7 @@ ggplot(
         title = "Economic Growth and Life Expectancy",
         subtitle = "Data points are country-years",
         caption = "Source: Gapminder."
-    ) +
-    theme_minimal()
+    ) 
 ```
 
 Another way to think about the underlying data is to remind ourselves about the **groups** we have, represented by the `continent` variable.
@@ -350,7 +389,6 @@ ggplot(
     geom_smooth(method = "lm", colour = "orange", fill = "grey90") +
     facet_wrap(~continent) +
     scale_x_log10(labels = scales::dollar) +
-    theme_minimal() +
     labs(
         x = "GDP per capita",
         y = "Life Expectancy in Years",
@@ -377,7 +415,6 @@ gapminder |>
     geom_smooth(linewidth = 1, method = "loess", se = FALSE) +
     scale_y_log10(labels = scales::dollar) +
     facet_wrap(~continent, ncol = 2) +
-    theme_minimal() +
     labs(
         x = "Year",
         y = "GDP per capita",
@@ -583,8 +620,7 @@ un_votes |>
     ungroup() |>
     ggplot(aes(x = year, y = pct_yes)) +
     geom_line() +
-    expand_limits(y = 0) +
-    theme_minimal()
+    expand_limits(y = 0) 
 ```
 
 Again, beware of pooling.
@@ -599,7 +635,6 @@ un_votes |>
     geom_line(aes(colour = country)) +
     scale_y_continuous(labels = scales::label_percent()) +
     expand_limits(y = 0) +
-    theme_minimal() +
     theme(legend.position = "top")
 ```
 
@@ -638,7 +673,6 @@ un_votes |>
     scale_y_continuous(labels = scales::label_percent()) +
     labs(colour = "", x = "Year", y = "Share of yes (%)") +
     expand_limits(y = 0) +
-    theme_minimal() +
     theme(legend.position = "top")
 ggsave(here::here("figures", "unvotes_yesbycountry.png"), 
     dpi = 300, height = 6, width = 8, device = "png", bg = "white")
@@ -801,8 +835,7 @@ comm_doc_count |>
     ggplot(aes(x = document_creator_organization, y = doc_count)) +
     geom_col(colour = "black", fill = "grey", linewidth = 0.1) +
     coord_flip() +
-    labs(x = "", y = "Count") +
-    theme_minimal()
+    labs(x = "", y = "Count") 
 ```
 
 Now, try to come up with your solution: what if you wanted also to know the volumes per Committee per year?
@@ -838,8 +871,7 @@ plenary_docs |>
         ncol = 4,
         labeller = labeller(document_creator_organization = label_wrap_gen(20))
     ) +
-    labs(x = "", y = "Count") +
-    theme_minimal()
+    labs(x = "", y = "Count") 
 ```
 
 ```{r}
@@ -904,7 +936,6 @@ ee_long |>
         title = "Parties' trends in the polls",
         caption = paste0("Source: EuropeElects. Data extracted on ", Sys.Date())
     ) +
-    theme_minimal() +
     theme(
         plot.title.position = "plot",
         plot.title = element_text(face = "bold"),
