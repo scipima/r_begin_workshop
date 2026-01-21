@@ -96,8 +96,8 @@ Either knit the chunk using the little green "play" arrow to the right of the ch
 # Notice the eval = FALSE declaration in the options section of the code chunk
 
 my_packages <- c(
-    "bit", "devtools", "gapminder", "ggrepel", "here", "janitor", "scales",
-    "tictoc", "tidyverse", "unvotes", "vroom"
+  "bit", "devtools", "gapminder", "ggrepel", "here", "janitor", "scales",
+  "tictoc", "tidyverse", "unvotes", "vroom"
 )
 install.packages(my_packages)
 devtools::install_github("kjhealy/socviz")
@@ -105,8 +105,8 @@ devtools::install_github("kjhealy/socviz")
 # repo set-up -----------------------------------------------------------------#
 # check if directory exists to dump processed files, figures, etc.
 if ( !dir.exists( here::here("figures") ) ) {
-    # if the directory does not exist, create it
-    dir.create(here::here("figures"))
+  # if the directory does not exist, create it
+  dir.create(here::here("figures"))
 }
 ```
 
@@ -186,11 +186,11 @@ As you'll see, there are usually multiple ways to achieve the exact same output 
 
 #------------------------------------------------------------------------------#
 p <- ggplot(
-    data = gapminder,
-    mapping = aes(
-        x = gdpPercap,
-        y = lifeExp
-    )
+  data = gapminder,
+  mapping = aes(
+    x = gdpPercap,
+    y = lifeExp
+  )
 )
 p + geom_point() # and you can keep on adding to this, see below ...
 ```
@@ -202,8 +202,10 @@ p + geom_point() # and you can keep on adding to this, see below ...
 
 #------------------------------------------------------------------------------#
 gapminder |> # pass the data along the pipe
-    ggplot(aes(x = gdpPercap, y = lifeExp)) + # no need to call the data
-    geom_point() # layered ggplot approach
+  ggplot(aes(x = gdpPercap, y = lifeExp)) + # no need to call the data
+  geom_point() # layered ggplot approach
+
+# plot(gapminder$lifeExp ~ gapminder$gdpPercap) # built-in graphics
 ```
 
 Let's unpack what happens in the code above:
@@ -218,7 +220,7 @@ Sometimes, when we face a cloud like the one above, it is useful to plot a trend
 Again, this is a further example of the *layered* approach in `ggplot2`, wherein we keep on adding aesthetic layers to our plot until we reach the desired output.
 ```{r}
 p + geom_point() +
-    geom_smooth()
+  geom_smooth()
 ```
 
 Looking at the graph itself, perhaps that is too wiggly.
@@ -227,14 +229,14 @@ This also should make you aware of the danger of extrapolating from predictions 
 ```{r}
 # another way to get the same result
 ggplot(
-    data = gapminder,
-    mapping = aes(
-        x = gdpPercap,
-        y = lifeExp
-    )
+  data = gapminder,
+  mapping = aes(
+    x = gdpPercap,
+    y = lifeExp
+  )
 ) +
-    geom_point() +
-    geom_smooth(method = "lm")
+  geom_point() +
+  geom_smooth(method = "lm")
 ```
 
 Data is quite bunched up against the left side. 
@@ -245,23 +247,23 @@ As you might expect this function scales the x-axis of a plot to a log 10 basis.
 To use it we just add it to the plot:
 ```{r}
 p <- ggplot(
-    data = gapminder,
-    mapping = aes(
-        x = gdpPercap,
-        y = lifeExp
-    )
+  data = gapminder,
+  mapping = aes(
+    x = gdpPercap,
+    y = lifeExp
+  )
 )
 p + geom_point() +
-    geom_smooth(method = "gam") +
-    scale_x_log10()
+  geom_smooth(method = "gam") +
+  scale_x_log10()
 ```
 
 The labels on the tick-marks can be controlled through the `scale_*` functions.
 Please notice that this we are using another library to have our tick labels in the dollar format. 
 ```{r}
 p + geom_point() +
-    geom_smooth(method = "gam") +
-    scale_x_log10(labels = scales::dollar)
+  geom_smooth(method = "gam") +
+  scale_x_log10(labels = scales::dollar)
 ```
 
 The viz above already is way more informative than the ones before, but there is more we can extract from the underlying data. 
@@ -320,22 +322,22 @@ We can then add informative labels, title, subtitle, and caption.
 #------------------------------------------------------------------------------#
 # Plot
 ggplot(
-    data = gapminder,
-    mapping = aes(
-        x = gdpPercap,
-        y = lifeExp
-    )
+  data = gapminder,
+  mapping = aes(
+    x = gdpPercap,
+    y = lifeExp
+  )
 ) +
-    geom_point(alpha = 0.3) +
-    geom_smooth(color = "orange", se = FALSE, linewidth = 1, method = "lm") +
-    scale_x_log10(labels = scales::dollar) +
-    labs(
-        x = "GDP per capita (in log scale)",
-        y = "Life Expectancy in Years",
-        title = "Economic Growth and Life Expectancy",
-        subtitle = "Data points are country-years",
-        caption = "Source: Gapminder."
-    ) 
+  geom_point(alpha = 0.3) +
+  geom_smooth(color = "orange", se = FALSE, linewidth = 1, method = "lm") +
+  scale_x_log10(labels = scales::dollar) +
+  labs(
+    x = "GDP per capita (in log scale)",
+    y = "Life Expectancy in Years",
+    title = "Economic Growth and Life Expectancy",
+    subtitle = "Data points are country-years",
+    caption = "Source: Gapminder."
+  ) 
 ```
 
 Another way to think about the underlying data is to remind ourselves about the **groups** we have, represented by the `continent` variable.
@@ -347,16 +349,17 @@ This has important consequences, and is a further example of the **sequential** 
 
 #------------------------------------------------------------------------------#
 ggplot(
-    data = gapminder,
-    mapping = aes(
-        x = gdpPercap,
-        y = lifeExp,
-        color = continent
-    )
+  data = gapminder,
+  mapping = aes(
+    x = gdpPercap,
+    y = lifeExp,
+    color = continent
+  )
 ) +
-    geom_point(alpha = 0.3) +
-    geom_smooth(color = "orange", se = FALSE, linewidth = 1, method = "lm") +
-    scale_x_log10(labels = scales::dollar)
+  geom_point(alpha = 0.3) +
+  # This overrides the colour aes above just for the smoothing
+  geom_smooth(color = "orange", se = FALSE, linewidth = 1, method = "lm") +
+  scale_x_log10(labels = scales::dollar)
 ```
 
 Indeed, see what happens when we do not override it.
@@ -366,16 +369,17 @@ We can immediately appreciate that the slopes of our regression are radically di
 
 #------------------------------------------------------------------------------#
 ggplot(
-    data = gapminder,
-    mapping = aes(
-        x = gdpPercap,
-        y = lifeExp,
-        color = continent
-    )
+  data = gapminder,
+  mapping = aes(
+    x = gdpPercap,
+    y = lifeExp,
+    color = continent
+  )
 ) +
-    geom_point(alpha = 0.3) +
-    geom_smooth(method = "lm") +
-    scale_x_log10(labels = scales::dollar)
+  geom_point(alpha = 0.3) +
+  # No override here, 1 line per continent
+  geom_smooth(method = "lm") +
+  scale_x_log10(labels = scales::dollar)
 ```
 
 However, this has become too cluttered, and it's hard to understand what's going on with all these colours and lines.
@@ -385,23 +389,23 @@ We reached saturation and need to revert to a simpler plot.
 
 #------------------------------------------------------------------------------#
 ggplot(
-    data = gapminder,
-    mapping = aes(
-        x = gdpPercap,
-        y = lifeExp
-    )
+  data = gapminder,
+  mapping = aes(
+    x = gdpPercap,
+    y = lifeExp
+  )
 ) +
-    geom_point(alpha = 0.3) +
-    geom_smooth(method = "lm", colour = "orange", fill = "grey90") +
-    facet_wrap(~continent) +
-    scale_x_log10(labels = scales::dollar) +
-    labs(
-        x = "GDP per capita",
-        y = "Life Expectancy in Years",
-        title = "Economic Growth and Life Expectancy",
-        subtitle = "Data points are country-years",
-        caption = "Source: Gapminder."
-    )
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", colour = "orange", fill = "grey90") +
+  facet_wrap(~continent) +
+  scale_x_log10(labels = scales::dollar) +
+  labs(
+    x = "GDP per capita",
+    y = "Life Expectancy in Years",
+    title = "Economic Growth and Life Expectancy",
+    subtitle = "Data points are country-years",
+    caption = "Source: Gapminder."
+  )
 ```
 
 What you observe above is variously termed as a *small multiple* visualisation, or *faceted* visualisation. 
@@ -414,18 +418,19 @@ A radically different take is to exploit the **time dimension**.
 
 #------------------------------------------------------------------------------#
 gapminder |>
-    # subset the data to just the rows with these continents
-    filter(continent %in% c("Asia", "Africa", "Europe", "Americas")) |>
-    ggplot(aes(x = year, y = gdpPercap)) +
-    geom_line(color = "gray80", aes(group = country)) +
-    geom_smooth(linewidth = 1, method = "loess", se = FALSE) +
-    scale_y_log10(labels = scales::dollar) +
-    facet_wrap(~continent, ncol = 2) +
-    labs(
-        x = "Year",
-        y = "GDP per capita",
-        title = "GDP per capita on five continents (1952-2007)"
-    )
+  # subset the data to just the rows with these continents
+  filter(continent %in% c("Asia", "Africa", "Europe", "Americas")) |>
+  ggplot(aes(x = year, y = gdpPercap)) +
+  # 1 smoothing line per continent
+  geom_line(color = "gray80", aes(group = country)) +
+  geom_smooth(linewidth = 1, method = "loess", se = FALSE) +
+  scale_y_log10(labels = scales::dollar) +
+  facet_wrap(~continent, ncol = 2) +
+  labs(
+    x = "Year",
+    y = "GDP per capita",
+    title = "GDP per capita on five continents (1952-2007)"
+  )
 ```
 
 A few takeaways from this.
@@ -434,9 +439,9 @@ A few takeaways from this.
 For instance, the value at the end of the time series for the grouped trend line in Asia is roughly where the start of the grouped time series is in Europe.
 * Second, pay attention to the larger variation surrounding the trend line in continents such as Asia and Africa compared to the relatively tighter distribution in Europe.
 Inter alia, this would have substantial consequences were we to fit a model to such data: the larger variance in the former continents would mean larger uncertainty in our estimates compared to the European case.
-In another case that you may be familiar with, this could happen to parties' polls, where we could have substantial variation in the polls translating into larger margin of errors in projections.
+In another case that you may be familiar with, this could happen to political parties' polls, where we could have substantial variation in the polls translating into larger margin of errors in projections.
 ```{r}
-rm(p)
+rm(p) # remove obsolete object
 ```
 
 
@@ -444,6 +449,9 @@ rm(p)
 Also in this Section the data comes directly from the library, exactly as in the case of `gapminder`.
 How many tables are we dealing with?
 ```{r}
+#| warning: false
+#| message: false
+
 library(unvotes)
 un_votes <- unvotes::un_votes
 un_roll_calls <- unvotes::un_roll_calls
@@ -455,16 +463,6 @@ If we want to get a quick glimpse of the distribution of votes, we could just si
 
 ::: {.panel-tabset}
 
-#### R tidyverse
-
-```{r}
-#| code-fold: show
-
-#------------------------------------------------------------------------------#
-un_votes |>
-    count(vote, sort = TRUE)
-```
-
 #### Base R
 
 ```{r}
@@ -472,9 +470,19 @@ un_votes |>
 
 #------------------------------------------------------------------------------#
 with(
-    un_votes,
-    tapply(X = vote, INDEX = vote, FUN = length)
-)
+  un_votes,
+  tapply(X = vote, INDEX = vote, FUN = length)
+) |> sort(decreasing = TRUE)
+```
+
+#### R tidyverse
+
+```{r}
+#| code-fold: show
+
+#------------------------------------------------------------------------------#
+un_votes |>
+  count(vote, sort = TRUE)
 ```
 
 #### R data.table
@@ -483,7 +491,7 @@ with(
 #| code-fold: show
 
 #------------------------------------------------------------------------------#
-data.table::setDT(un_votes)[, .N, by = list(vote)]
+data.table::setDT(un_votes)[, .N, by = list(vote)][order(-N)]
 ```
 
 :::
@@ -502,7 +510,7 @@ table(un_votes$vote_int, un_votes$vote, exclude = NULL)
 
 
 ### Aggregations
-Share of votes, by country.
+Say that now you are interested in the share of votes by country.
 Check how you can do it in 2 ways, with a rough appreciation of the timing difference.
 I'll walk you through just the `tidyverse` implementation.
 
@@ -527,13 +535,13 @@ library(tictoc) # library for timing
 tictoc::tic() # timing on
 
 un_votes |>
-    group_by(country) |> # group by country
-    summarise(
-        n_votes = n(), # count votes
-        n_yes = sum(vote == "yes", na.rm = TRUE) # count yes
-    ) |>
-    ungroup() |> # ungroup operations
-    mutate(pct_yes = n_yes / n_votes) # create new col, no summarise
+  group_by(country) |> # group by country
+  summarise(
+    n_votes = n(), # count votes
+    n_yes = sum(vote == "yes", na.rm = TRUE) # count yes
+  ) |>
+  ungroup() |> # ungroup operations
+  mutate(pct_yes = n_yes / n_votes) # create new col, no summarise
 
 tictoc::toc() # timing off
 ```
@@ -547,15 +555,12 @@ tictoc::toc() # timing off
 # aggregation: data.table style -----------------------------------------------#
 tictoc::tic()
 
-data.table::setDT(un_votes)[
-    , list(
-        n_votes = .N,
-        n_yes = sum(vote == "yes", na.rm = TRUE)
-    ),
-    keyby = list(country)
-][
-    , pct_yes := n_yes / n_votes
-][]
+data.table::setDT(un_votes)[, list(
+  n_votes = .N,
+  n_yes = sum(vote == "yes", na.rm = TRUE)
+),
+keyby = list(country)
+][, pct_yes := n_yes / n_votes][]
 
 tictoc::toc()
 ```
@@ -577,21 +582,21 @@ Notice a few things:
 #------------------------------------------------------------------------------#
 # write your first function
 summarise_votes <- function(data_in = un_votes, min_tot_votes = 10L) {
-    data_in |>
-        dplyr::summarise(
-            n_votes = n(),
-            n_yes = sum(vote == "yes", na.rm = TRUE)
-        ) |>
-        dplyr::filter(n_votes >= min_tot_votes) |> # filter by at least this many votes
-        dplyr::mutate(pct_yes = n_yes / n_votes) |>
-        dplyr::arrange(dplyr::desc(pct_yes)) # arrange by pct_yes
+  data_in |>
+    dplyr::summarise(
+      n_votes = n(),
+      n_yes = sum(vote == "yes", na.rm = TRUE)
+    ) |>
+    dplyr::filter(n_votes >= min_tot_votes) |> # filter by at least this many votes
+    dplyr::mutate(pct_yes = n_yes / n_votes) |>
+    dplyr::arrange(dplyr::desc(pct_yes)) # arrange by pct_yes
 }
 
 # test, we should get the same answer as above ... -------------------------------#
 un_votes |>
-    group_by(country) |>
-    summarise_votes() |> 
-    ungroup()
+  group_by(country) |>
+  summarise_votes() |> # use the newly created function
+  ungroup()
 ```
 
 
@@ -605,43 +610,43 @@ Notice the use of `left_join`.
 
 #------------------------------------------------------------------------------#
 un_votes <- un_votes |> # start with this data
-    dplyr::left_join( # join only the matches in the origin data
-        y = un_roll_calls |> # from this data, we keep only the matches in the incoming data from the pipe
-            dplyr::select(rcid, date), # we also subset the right-hand side data on the fly
-        by = "rcid" # we merge by this col
-    ) |>
-    dplyr::mutate(year = lubridate::year(date)) # create a year col
+  dplyr::left_join( # join only the matches in the origin data
+    y = un_roll_calls |> # from this data, we keep only the matches in the incoming data from the pipe
+      dplyr::select(rcid, date), # we also subset the right-hand side data on the fly
+    by = "rcid" # we merge by this col
+  ) |>
+  dplyr::mutate(year = lubridate::year(date)) # create a year col
 
 # same result, this time in base R
 # merge(un_votes, un_roll_calls,
 #       by = "rcid",
-#       all.x = TRUE, all.y = TRUE) # left join
+#       all.x = TRUE, all.y = FALSE) # left join
 ```
 
 Graph the evolution over time of share of yes.
 ```{r}
 un_votes |>
-    dplyr::group_by(year) |>
-    summarise_votes() |>
-    ungroup() |>
-    ggplot(aes(x = year, y = pct_yes)) +
-    geom_line() +
-    expand_limits(y = 0) 
+  dplyr::group_by(year) |>
+  summarise_votes() |>
+  ungroup() |>
+  ggplot(aes(x = year, y = pct_yes)) +
+  geom_line() +
+  expand_limits(y = 0) 
 ```
 
 Again, beware of pooling.
 What if we split the overall trend by country?
 ```{r}
 un_votes |>
-    dplyr::filter(country %in% c("France", "Germany", "Sweden", "United States")) |>
-    dplyr::group_by(country, year) |> # notice we're grouping by 2 cols here
-    summarise_votes() |>
-    ungroup() |>
-    ggplot(aes(x = year, y = pct_yes, group = country)) +
-    geom_line(aes(colour = country)) +
-    scale_y_continuous(labels = scales::label_percent()) +
-    expand_limits(y = 0) +
-    theme(legend.position = "top")
+  dplyr::filter(country %in% c("France", "Germany", "Sweden", "United States")) |>
+  dplyr::group_by(country, year) |> # notice we're grouping by 2 cols here
+  summarise_votes() |>
+  ungroup() |>
+  ggplot(aes(x = year, y = pct_yes, group = country)) +
+  geom_line(aes(colour = country)) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  expand_limits(y = 0) +
+  theme(legend.position = "top")
 ```
 
 This can become too cluttered very soon.
@@ -651,37 +656,47 @@ However, depending on the country, the plot may be similar or way off from the a
 So, we can remind ourselves in every graph what the overall trend is.
 Now, you can tweak your code to represent your overall trend in any way you like (e.g. regional data?). 
 ```{r}
-dir.create(path = here::here("figures"))
+#| warning: false
+#| message: false
+#| fig-width: 8
+#| fig-height: 7
+
+#------------------------------------------------------------------------------#
+# Plot
 un_votes |>
-    dplyr::filter(
-        country %in% c(
-            "France", "Germany", "Sweden", "United States", "Russia", "China"
-        )
-    ) |>
-    dplyr::group_by(country, year) |> # notice we're grouping by 2 cols here
-    summarise_votes() |>
-    ungroup() |>
-    ggplot() + # notice this is empty
-    geom_line(aes(
-        x = year, y = pct_yes, # we're passing aes directly to geoms
-        group = country, colour = country
-    )) +
-    # here we're providing new data, aggregated on the fly
-    geom_line(
-        data = un_votes |>
-            dplyr::group_by(year) |>
-            summarise_votes() |>
-            ungroup(),
-        aes(x = year, y = pct_yes),
-        colour = "grey", linewidth = 1
-    ) +
-    facet_wrap(~country, ncol = 2) +
-    scale_y_continuous(labels = scales::label_percent()) +
-    labs(colour = "", x = "Year", y = "Share of yes (%)") +
-    expand_limits(y = 0) +
-    theme(legend.position = "top")
+  dplyr::filter(
+    country %in% c(
+      "France", "Germany", "Sweden", "United States", "Russia", "China"
+    )
+  ) |>
+  dplyr::group_by(country, year) |> # notice we're grouping by 2 cols here
+  summarise_votes() |>
+  ungroup() |>
+  ggplot() + # notice this is empty
+  geom_line(aes(
+    x = year, y = pct_yes, # we're passing aes directly to geoms
+    group = country, colour = country
+  ), 
+  show.legend = FALSE) +
+  # here we're providing new data, aggregated on the fly
+  geom_line(
+    data = un_votes |>
+      dplyr::group_by(year) |>
+      summarise_votes() |>
+      ungroup(),
+    aes(x = year, y = pct_yes),
+    colour = "grey", linewidth = 1
+  ) +
+  facet_wrap(~country, ncol = 3) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  labs(x = NULL, y = "Share of yes (%)") +
+  expand_limits(y = 0) +
+  theme(
+    axis.title.y = element_text(size = 30)
+  )
+# Store the figure locally
 ggsave(here::here("figures", "unvotes_yesbycountry.png"), 
-    dpi = 300, height = 6, width = 8, device = "png", bg = "white")
+       dpi = 300, height = 6, width = 8, device = "png", bg = "white")
 ```
 
 ```{r}
@@ -715,17 +730,15 @@ How would you go about answering this question?
 
 ## Texts tabled: read csv & append it all together -----------------------------
 docs_csv <- c(
-    "https://data.europarl.europa.eu/distribution/plenary-documents_2024_15_en.csv",
-    "https://data.europarl.europa.eu/distribution/plenary-documents_2023_52_en.csv",
-    "https://data.europarl.europa.eu/distribution/plenary-documents_2022_33_en.csv",
-    "https://data.europarl.europa.eu/distribution/plenary-documents_2021_22_en.csv",
-    "https://data.europarl.europa.eu/distribution/plenary-documents_2020_14_en.csv",
-    "https://data.europarl.europa.eu/distribution/plenary-documents_2019_5_en.csv"
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2024_15_en.csv",
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2023_52_en.csv",
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2022_33_en.csv",
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2021_22_en.csv",
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2020_14_en.csv",
+  "https://data.europarl.europa.eu/distribution/plenary-documents_2019_5_en.csv"
 )
 # read all .csv at once
 docs_list <- lapply(X = docs_csv, readr::read_csv)
-# append all .csv together ----------------------------------------------------#
-plenary_docs <- data.table::rbindlist(l = docs_list, use.names = T, fill = T)
 
 #------------------------------------------------------------------------------#
 # Same thing, as a loop -------------------------------------------------------#
@@ -734,6 +747,9 @@ plenary_docs <- data.table::rbindlist(l = docs_list, use.names = T, fill = T)
 #   print(i_doc)
 #   docs_list[[i_doc]] <- read.csv(file = i_doc) }
 #------------------------------------------------------------------------------#
+
+# append all .csv together ----------------------------------------------------#
+plenary_docs <- data.table::rbindlist(l = docs_list, use.names = TRUE, fill = TRUE)
 ```
 
 ```
@@ -753,18 +769,37 @@ Do we have duplicate entries in the doc id?
 We can table the number of times each document appears in the file.
 ```{r}
 table(plenary_docs$document_identifier, exclude = NULL) |>
-    head(5)
+  head(5)
 ```
 
 We can then take the mean of the cross-tabulation above.
+If the mean is above 1, then we have multiple entries.
 ```{r}
 mean(table(plenary_docs$document_identifier, exclude = NULL))
+```
+
+Say that, for whtever reason, you know you cannot have more than 1 DOC ID.
+If the data shows you a count higher than 1, then you prefer to stop altogether and issue an informative error message.
+You can do the following.
+```{r}
+# Example of control flow execution
+if ( mean(table(plenary_docs$document_identifier, exclude = NULL)) > 1 ) {
+  # Isolate duplicates
+  duplicates = plenary_docs$document_identifier[
+    table(plenary_docs$document_identifier, exclude = NULL) > 1
+  ]
+  stop(paste0("\nThe DOC ID does not appear to be unique. Check your data\n",
+              paste0(duplicates, collapse = "; "))
+  )
+} else {
+ cat("\nYou have no duplicates in your data. Good to go.\n") 
+}
 ```
 
 We can then extract the unique names of the Committees in the text.
 ```{r}
 head(sort(unique(plenary_docs$document_creator_organization)))
-tail(sort(unique(plenary_docs$document_creator_organization)))
+# tail(sort(unique(plenary_docs$document_creator_organization))) # inspect the last items
 ```
 
 There are way too many values here.
@@ -774,39 +809,40 @@ We need to filter on the string to get just the pattern of interest, namely `Com
 
 #------------------------------------------------------------------------------#
 plenary_docs |>
-    dplyr::filter(
-        grepl(
-            pattern = "Committee on ",
-            x = document_creator_organization
-        )
-    ) |>
-    dplyr::group_by(document_creator_organization) |>
-    dplyr::summarise(count = n()) |>
-    dplyr::arrange(dplyr::desc(count))
+  dplyr::filter(
+    grepl( # REGEX
+      pattern = "Committee on ",
+      x = document_creator_organization
+    )
+  ) |>
+  dplyr::group_by(document_creator_organization) |>
+  dplyr::summarise(count = n()) |>
+  dplyr::arrange(dplyr::desc(count))
 ```
 
 However, we're not done here.
 If we actually check the tail of the table above - by simply running `tail()` -, we can notice something weird. 
+Some Committees appear to have multiple DOC IDs associated with them - these are *Joint Committees*.
 ```{r}
 #| code-fold: show
 
 #------------------------------------------------------------------------------#
 plenary_docs |>
-    dplyr::filter(
-        grepl(
-            pattern = "Committee on ",
-            x = document_creator_organization
-        )
-    ) |>
-    tidyr::separate_longer_delim(cols = document_creator_organization, delim = ";") |>
-    dplyr::mutate(
-        document_creator_organization = trimws(document_creator_organization)
-    ) |>
-    dplyr::select(document_identifier, document_creator_organization) %>%
-    dplyr::group_by(document_identifier) |>
-    dplyr::summarise(committee_count = n()) |>
-    dplyr::ungroup() |>
-    dplyr::arrange(dplyr::desc(committee_count))
+  dplyr::filter(
+    grepl(
+      pattern = "Committee on ",
+      x = document_creator_organization
+    )
+  ) |>
+  tidyr::separate_longer_delim(cols = document_creator_organization, delim = ";") |>
+  dplyr::mutate(
+    document_creator_organization = trimws(document_creator_organization)
+  ) |>
+  dplyr::select(document_identifier, document_creator_organization) %>%
+  dplyr::group_by(document_identifier) |>
+  dplyr::summarise(committee_count = n()) |>
+  dplyr::ungroup() |>
+  dplyr::arrange(dplyr::desc(committee_count))
 ```
 
 We need to split the cells that contain multiple Committees.
@@ -815,36 +851,39 @@ We need to split the cells that contain multiple Committees.
 
 #------------------------------------------------------------------------------#
 comm_doc_count <- plenary_docs |>
-    dplyr::filter(
-        grepl(
-            pattern = "Committee on ",
-            x = document_creator_organization
-        )
+  dplyr::filter(
+    grepl(
+      pattern = "Committee on ",
+      x = document_creator_organization
+    )
+  ) |>
+  tidyr::separate_longer_delim(
+    cols = document_creator_organization, # split this col
+    delim = ";" # on this delimiter
     ) |>
-    tidyr::separate_longer_delim(cols = document_creator_organization, delim = ";") |>
-    dplyr::mutate(
-        document_creator_organization = trimws(document_creator_organization)
-    ) |>
-    dplyr::group_by(document_creator_organization) |>
-    dplyr::summarise(doc_count = n()) |>
-    dplyr::ungroup() |>
-    dplyr::arrange(dplyr::desc(doc_count))
+  dplyr::mutate(
+    document_creator_organization = trimws(document_creator_organization)
+  ) |>
+  dplyr::group_by(document_creator_organization) |>
+  dplyr::summarise(doc_count = n()) |>
+  dplyr::ungroup() |>
+  dplyr::arrange(dplyr::desc(doc_count))
 ```
 
 And we can plot to visually inspect that everything went as intended.
 ```{r}
 comm_doc_count |>
-    dplyr::filter(doc_count > 1L) |>
-    dplyr::mutate(document_creator_organization = forcats::fct_reorder(
-        .f = document_creator_organization, .x = doc_count, .fun = max
-    )) |>
-    ggplot(aes(x = document_creator_organization, y = doc_count)) +
-    geom_col(colour = "black", fill = "grey", linewidth = 0.1) +
-    coord_flip() +
-    labs(x = "", y = "Count") 
+  dplyr::filter(doc_count > 1L) |>
+  dplyr::mutate(document_creator_organization = forcats::fct_reorder(
+    .f = document_creator_organization, .x = doc_count, .fun = max
+  )) |>
+  ggplot(aes(x = document_creator_organization, y = doc_count)) +
+  geom_col(colour = "black", fill = "grey", linewidth = 0.1) +
+  coord_flip() +
+  labs(x = "", y = "Count") 
 ```
 
-Now, try to come up with your solution: what if you wanted also to know the volumes per Committee per year?
+Now, before seeing the code below, try to come up with your solution: what if you wanted also to know the volumes per Committee per year?
 ```{r}
 #| fig-width: 8
 #| fig-height: 10
@@ -853,31 +892,33 @@ Now, try to come up with your solution: what if you wanted also to know the volu
 
 #------------------------------------------------------------------------------#
 plenary_docs |>
-    dplyr::filter(grepl(
-        pattern = "Committee on ",
+  dplyr::filter(grepl(
+    pattern = "Committee on ",
+    x = document_creator_organization
+  )) |>
+  tidyr::separate_longer_delim(cols = document_creator_organization, delim = ";") |>
+  dplyr::mutate(
+    document_creator_organization = trimws(
+      gsub(
+        pattern = "Committee on |Committee on the ", replacement = "",
         x = document_creator_organization
-    )) |>
-    tidyr::separate_longer_delim(cols = document_creator_organization, delim = ";") |>
-    dplyr::mutate(
-        document_creator_organization = trimws(
-            gsub(
-                pattern = "Committee on |Committee on the ", replacement = "",
-                x = document_creator_organization
-            )
-        )
-    ) |>
-    dplyr::group_by(document_creator_organization, year) |>
-    dplyr::summarise(doc_count = n()) |>
-    dplyr::ungroup() |>
-    dplyr::arrange(dplyr::desc(doc_count)) |>
-    dplyr::filter(doc_count > 1L) |>
-    ggplot(aes(x = year, y = doc_count)) +
-    geom_line(colour = "black", linewidth = 1) +
-    facet_wrap(~document_creator_organization,
-        ncol = 4,
-        labeller = labeller(document_creator_organization = label_wrap_gen(20))
-    ) +
-    labs(x = "", y = "Count") 
+      )
+    )
+  ) |>
+  dplyr::group_by(document_creator_organization, year) |>
+  dplyr::summarise(doc_count = n()) |>
+  dplyr::ungroup() |>
+  dplyr::arrange(dplyr::desc(doc_count)) |>
+  dplyr::filter(doc_count > 1L) |>
+  dplyr::mutate(year_date = as.Date(paste0(year, "-01-01"))) |>
+  ggplot(aes(x = year_date, y = doc_count)) +
+  geom_line(colour = "black", linewidth = 1) +
+  facet_wrap(~document_creator_organization,
+             ncol = 4,
+             labeller = labeller(document_creator_organization = label_wrap_gen(20))
+  ) +
+  labs(x = "", y = "Count") +
+  theme(strip.text = element_text(lineheight = 0.5)) 
 ```
 
 ```{r}
@@ -900,53 +941,53 @@ Polls are extracted from [EuropeElects](https://europeelects.eu/germany/).
 ## EuropeElects ----------------------------------------------------------------
 # Read in data (REF: https://storage.googleapis.com/asapop-website-20220812/csv.html; https://filipvanlaenen.github.io/eopaod/pl.csv)
 ee <- data.table::fread(
-    # file = here::here("data_in", "pl.csv")
-    input = "https://storage.googleapis.com/asapop-website-20220812/_csv/de.csv"
+  # file = here::here("data_in", "pl.csv")
+  input = "https://storage.googleapis.com/asapop-website-20220812/_csv/de.csv"
 ) |>
-    janitor::clean_names()
+  janitor::clean_names()
 # str(ee)
 
 ### --------------------------------------------------------------------------###
 ## Process the data ------------------------------------------------------------
 # Reshape to long
 ee_long <- ee |>
-    tidyr::pivot_longer(
-        cols = cdu_csu:other,
-        # cols = c(which(names(ee) == "cdu_csu") : which(names(ee) == "other") ),
-        names_to = "party_ee", values_to = "share"
-    ) |>
-    # recode date and share
-    dplyr::mutate(
-        fieldwork_start = as.Date(fieldwork_start),
-        share = readr::parse_number(share)
-    )
+  tidyr::pivot_longer(
+    cols = cdu_csu:other,
+    # cols = c(which(names(ee) == "cdu_csu") : which(names(ee) == "other") ),
+    names_to = "party_ee", values_to = "share"
+  ) |>
+  # recode date and share
+  dplyr::mutate(
+    fieldwork_start = as.Date(fieldwork_start),
+    share = readr::parse_number(share)
+  )
 
 ### --------------------------------------------------------------------------###
 ## Plot ------------------------------------------------------------------------
 ee_long |>
-    dplyr::filter(
-        !is.na(party_ee) & !is.na(share) &
-            party_ee %in% c(
-                "af_d", "cdu", "cdu_csu", "cdu", "fdp", "fw", "grune",
-                "link", "spd"
-            ) &
-            fieldwork_start >= as.Date("2024-01-01")
-    ) |>
-    ggplot(aes(x = fieldwork_start, y = share)) +
-    geom_point(alpha = 0.2) +
-    geom_smooth(aes(group = party_ee, colour = party_ee, fill = party_ee),
-        method = "loess", alpha = 0.2
-    ) +
-    labs(
-        colour = "", fill = "", x = "",
-        title = "Parties' trends in the polls",
-        caption = paste0("Source: EuropeElects. Data extracted on ", Sys.Date())
-    ) +
-    theme(
-        plot.title.position = "plot",
-        plot.title = element_text(face = "bold"),
-        legend.position = "top"
-    )
+  dplyr::filter(
+    !is.na(party_ee) & !is.na(share) &
+      party_ee %in% c(
+        "af_d", "cdu", "cdu_csu", "cdu", "fdp", "fw", "grune",
+        "link", "spd"
+      ) &
+      fieldwork_start >= as.Date("2024-01-01")
+  ) |>
+  ggplot(aes(x = fieldwork_start, y = share)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(aes(group = party_ee, colour = party_ee, fill = party_ee),
+              method = "loess", alpha = 0.2
+  ) +
+  labs(
+    colour = "", fill = "", x = "",
+    title = "Parties' trends in the polls",
+    caption = paste0("Source: EuropeElects. Data extracted on ", Sys.Date())
+  ) +
+  theme(
+    plot.title.position = "plot",
+    plot.title = element_text(face = "bold"),
+    legend.position = "top"
+  )
 ```
 
 ```{r}
