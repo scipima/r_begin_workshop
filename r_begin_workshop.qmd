@@ -303,7 +303,8 @@ ggplot2::theme_set(
   theme_minimal(base_family = "EuropeaNarrow") +
     theme(
       plot.title.position = "plot",
-      plot.title = element_text(face = "bold"),
+      plot.title = element_text(face = "bold", size = 35),
+      plot.subtitle = element_text(size = 30),
       plot.caption.position = "plot",
       plot.caption = element_text(hjust = 0, size = 20),
       strip.text = element_text(family = "EuropeaNarrowSemibold", size=25),
@@ -311,6 +312,11 @@ ggplot2::theme_set(
       panel.spacing.x = unit(1.5, "lines"),
       axis.text.y = element_text(size = 30),
       axis.text.x = element_text(size = 30),
+      axis.title.y = element_text(size = 30),
+      axis.title.x = element_text(size = 30),
+      legend.position = "top",
+      legend.text = element_text(size=30),
+      legend.title = element_text(size=30)
     )
 )
 ```
@@ -359,7 +365,15 @@ ggplot(
   geom_point(alpha = 0.3) +
   # This overrides the colour aes above just for the smoothing
   geom_smooth(color = "orange", se = FALSE, linewidth = 1, method = "lm") +
-  scale_x_log10(labels = scales::dollar)
+  scale_x_log10(labels = scales::dollar) +
+  labs(
+    x = "GDP per capita (in log scale)",
+    y = "Life Expectancy in Years",
+    colour = "Continent",
+    title = "Economic Growth and Life Expectancy",
+    subtitle = "Data points are country-years",
+    caption = "Source: Gapminder."
+  ) 
 ```
 
 Indeed, see what happens when we do not override it.
@@ -792,7 +806,7 @@ if ( mean(table(plenary_docs$document_identifier, exclude = NULL)) > 1 ) {
               paste0(duplicates, collapse = "; "))
   )
 } else {
- cat("\nYou have no duplicates in your data. Good to go.\n") 
+  cat("\nYou have no duplicates in your data. Good to go.\n") 
 }
 ```
 
@@ -860,7 +874,7 @@ comm_doc_count <- plenary_docs |>
   tidyr::separate_longer_delim(
     cols = document_creator_organization, # split this col
     delim = ";" # on this delimiter
-    ) |>
+  ) |>
   dplyr::mutate(
     document_creator_organization = trimws(document_creator_organization)
   ) |>
@@ -980,7 +994,7 @@ ee_long |>
   ) +
   labs(
     colour = "", fill = "", x = "",
-    title = "Parties' trends in the polls",
+    title = "Parties' trends in polls",
     caption = paste0("Source: EuropeElects. Data extracted on ", Sys.Date())
   ) +
   theme(
